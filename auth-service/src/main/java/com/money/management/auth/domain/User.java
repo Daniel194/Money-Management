@@ -25,6 +25,12 @@ public class User implements UserDetails {
 
     private Boolean enabled;
 
+    @NotNull
+    private AuthProvider provider;
+
+    @NotNull
+    private String providerId;
+
     @Override
     public String getPassword() {
         return password;
@@ -70,5 +76,21 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public AuthProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 }

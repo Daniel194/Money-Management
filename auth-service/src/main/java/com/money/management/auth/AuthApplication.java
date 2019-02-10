@@ -1,9 +1,11 @@
 package com.money.management.auth;
 
+import com.money.management.auth.config.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +34,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @EnableResourceServer
 @EnableDiscoveryClient
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableConfigurationProperties(AppProperties.class)
 public class AuthApplication {
 
     public static void main(String[] args) {
