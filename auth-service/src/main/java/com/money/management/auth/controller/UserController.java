@@ -1,6 +1,6 @@
 package com.money.management.auth.controller;
 
-import com.money.management.auth.domain.ResetPassword;
+import com.money.management.auth.payload.ResetPasswordRequest;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.service.ForgotPasswordService;
 import com.money.management.auth.service.UserService;
@@ -50,8 +50,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/password/forgot", method = RequestMethod.PUT)
-    public String resetPassword(@Valid @RequestBody ResetPassword resetPassword) {
-        return forgotPasswordService.resetPassword(resetPassword);
+    public String resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return forgotPasswordService.resetPassword(resetPasswordRequest);
     }
 
     @RequestMapping(value = "/change/password", method = RequestMethod.POST)

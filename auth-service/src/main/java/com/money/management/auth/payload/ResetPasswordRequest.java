@@ -1,6 +1,6 @@
-package com.money.management.auth.domain;
+package com.money.management.auth.payload;
 
-public class ResetPassword {
+public class ResetPasswordRequest {
     private String token;
     private String password;
 

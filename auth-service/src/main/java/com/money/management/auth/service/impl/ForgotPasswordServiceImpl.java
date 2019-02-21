@@ -1,7 +1,7 @@
 package com.money.management.auth.service.impl;
 
 import com.money.management.auth.domain.ForgotPasswordToken;
-import com.money.management.auth.domain.ResetPassword;
+import com.money.management.auth.payload.ResetPasswordRequest;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.listener.event.OnForgotPasswordCompleteEvent;
 import com.money.management.auth.repository.ForgotPasswordTokenRepository;
@@ -62,8 +62,8 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public String resetPassword(ResetPassword resetPassword) {
-        Optional<ForgotPasswordToken> optional = repository.findById(resetPassword.getToken());
+    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        Optional<ForgotPasswordToken> optional = repository.findById(resetPasswordRequest.getToken());
 
         if (optional.isEmpty()) {
             return "The token is invalid !";
@@ -75,7 +75,7 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
             return "Forgot password toke has expired !";
         }
 
-        updateUserPassword(token.getUser(), resetPassword.getPassword());
+        updateUserPassword(token.getUser(), resetPasswordRequest.getPassword());
 
         return "The password was changed successfully !";
     }
