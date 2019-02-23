@@ -2,7 +2,7 @@ package com.money.management.auth.service;
 
 import org.springframework.security.core.Authentication;
 
-public interface TokenProvider {
+public interface TokenProviderService {
 
     String createToken(Authentication authentication);
 

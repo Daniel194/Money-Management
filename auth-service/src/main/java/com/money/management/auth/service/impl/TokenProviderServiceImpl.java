@@ -3,7 +3,7 @@ package com.money.management.auth.service.impl;
 
 import com.money.management.auth.config.AppProperties;
 import com.money.management.auth.domain.User;
-import com.money.management.auth.service.TokenProvider;
+import com.money.management.auth.service.TokenProviderService;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class TokenProviderImpl implements TokenProvider {
+public class TokenProviderServiceImpl implements TokenProviderService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenProviderImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenProviderServiceImpl.class);
 
     private AppProperties appProperties;
 
     @Autowired
-    public TokenProviderImpl(AppProperties appProperties) {
+    public TokenProviderServiceImpl(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
 

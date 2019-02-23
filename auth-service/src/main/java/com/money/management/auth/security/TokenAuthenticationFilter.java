@@ -1,6 +1,6 @@
-package com.money.management.auth.service.security;
+package com.money.management.auth.security;
 
-import com.money.management.auth.service.TokenProvider;
+import com.money.management.auth.service.TokenProviderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
     @Autowired
-    private TokenProvider tokenProvider;
+    private TokenProviderService tokenProviderService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -51,13 +51,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private void setAuthentication(HttpServletRequest request) {
         String jwt = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+        if (StringUtils.hasText(jwt) && tokenProviderService.validateToken(jwt)) {
             setAuthentication(request, jwt);
         }
     }
 
     private void setAuthentication(HttpServletRequest request, String jwt) {
-        String userName = tokenProvider.getUserNameFromToken(jwt);
+        String userName = tokenProviderService.getUserNameFromToken(jwt);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
