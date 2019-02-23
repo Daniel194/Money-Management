@@ -3,6 +3,7 @@ package com.money.management.auth.security;
 import com.money.management.auth.AuthApplication;
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.domain.User;
+import com.money.management.auth.security.impl.UserDetailsServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

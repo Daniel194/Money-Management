@@ -1,9 +1,9 @@
-package com.money.management.auth.service.impl;
+package com.money.management.auth.security.impl;
 
 
 import com.money.management.auth.config.AppProperties;
 import com.money.management.auth.domain.User;
-import com.money.management.auth.service.TokenProviderService;
+import com.money.management.auth.security.TokenProviderService;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

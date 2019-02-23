@@ -1,4 +1,4 @@
-package com.money.management.auth.service;
+package com.money.management.auth.security;
 
 import org.springframework.security.core.Authentication;
 

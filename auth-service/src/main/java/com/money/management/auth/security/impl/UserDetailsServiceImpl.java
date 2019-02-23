@@ -1,4 +1,4 @@
-package com.money.management.auth.security;
+package com.money.management.auth.security.impl;
 
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.domain.User;
