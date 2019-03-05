@@ -1,5 +1,8 @@
 package com.money.management.auth.service.impl;
 
+import com.money.management.auth.domain.AuthProvider;
+import com.money.management.auth.exception.BadRequestException;
+import com.money.management.auth.payload.SignUpRequest;
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.listener.event.OnRegistrationCompleteEvent;
@@ -41,6 +44,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void create(SignUpRequest signUpRequest) {
+        User existing = repository.findUsersByUsername(signUpRequest.getEmail());
+
+        if (existing != null) {
+            throw new BadRequestException("User already exists: " + existing.getUsername());
+        }
+
+        User user = createUser(signUpRequest);
+
+        repository.save(user);
+        log.info("New user has been created: {}", user.getUsername());
+
+        sendVerificationEmail(user);
+    }
+
+    @Override
     public void changePassword(String name, String password) {
         User user = repository.findUsersByUsername(name);
         user.setPassword(encoder.encode(password));
@@ -51,10 +70,21 @@ public class UserServiceImpl implements UserService {
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
     }
 
+    private User createUser(SignUpRequest signUpRequest) {
+        User user = new User();
+        user.setPassword(signUpRequest.getPassword());
+        user.setUsername(signUpRequest.getEmail());
+
+        setUserValues(user);
+
+        return user;
+    }
+
     private void setUserValues(User user) {
         String hash = encoder.encode(user.getPassword());
         user.setPassword(hash);
         user.setEnabled(false);
+        user.setProvider(AuthProvider.LOCAL);
     }
 
 }
