@@ -43,9 +43,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    @Autowired
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
         return new TokenAuthenticationFilter();
@@ -63,7 +60,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/users/verification**", "/users/verification/resend**", "/users/password/forgot**");
+        webSecurity.ignoring().antMatchers("/auth/**", "/oauth2/**");
     }
 
     @Override
@@ -71,50 +68,25 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf()
-                .disable()
-                .formLogin()
-                .disable()
-                .httpBasic()
-                .disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .csrf().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
+                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
-                .authorizeRequests()
-                .antMatchers("/",
-                        "/error",
-                        "/favicon.ico",
-                        "/**/*.png",
-                        "/**/*.gif",
-                        "/**/*.svg",
-                        "/**/*.jpg",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js")
-                .permitAll()
-                .antMatchers("/auth/**", "/oauth2/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .oauth2Login().authorizationEndpoint()
+                .baseUri("/oauth2/authorize").authorizationRequestRepository(cookieAuthorizationRequestRepository())
                 .and()
-                .redirectionEndpoint()
-                .baseUri("/oauth2/callback/*")
+                .redirectionEndpoint().baseUri("/oauth2/callback/*")
                 .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
+                .userInfoEndpoint().userService(oAuth2UserService)
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler);
 
-        // Add our custom Token based authentication filter
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

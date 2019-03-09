@@ -1,12 +1,11 @@
 package com.money.management.auth.controller;
 
 
-import com.money.management.auth.payload.ApiResponse;
-import com.money.management.auth.payload.AuthResponse;
-import com.money.management.auth.payload.LoginRequest;
-import com.money.management.auth.payload.SignUpRequest;
+import com.money.management.auth.payload.*;
 import com.money.management.auth.security.TokenProviderService;
+import com.money.management.auth.service.ForgotPasswordService;
 import com.money.management.auth.service.UserService;
+import com.money.management.auth.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,15 +23,21 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     private TokenProviderService tokenProviderService;
     private UserService userService;
+    private VerificationTokenService verificationTokenService;
+    private ForgotPasswordService forgotPasswordService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                           TokenProviderService tokenProviderService,
-                          UserService userService) {
+                          UserService userService,
+                          VerificationTokenService verificationTokenService,
+                          ForgotPasswordService forgotPasswordService) {
 
         this.authenticationManager = authenticationManager;
         this.tokenProviderService = tokenProviderService;
         this.userService = userService;
+        this.verificationTokenService = verificationTokenService;
+        this.forgotPasswordService = forgotPasswordService;
     }
 
     @PostMapping("/login")
@@ -57,6 +62,26 @@ public class AuthController {
         userService.create(signUpRequest);
 
         return ResponseEntity.ok(new ApiResponse(true, "User registered successfully !"));
+    }
+
+    @RequestMapping(value = "/verification", method = RequestMethod.GET)
+    public String mailVerification(@RequestParam("token") String token) {
+        return verificationTokenService.enableUser(token);
+    }
+
+    @RequestMapping(value = "/verification/resend", method = RequestMethod.GET)
+    public String resendMailVerification(@RequestParam("email") String email) {
+        return verificationTokenService.resendMailVerification(email);
+    }
+
+    @RequestMapping(value = "/password/forgot", method = RequestMethod.GET)
+    public String sendForgotPasswordMail(@RequestParam("email") String email) {
+        return forgotPasswordService.sendEmail(email);
+    }
+
+    @RequestMapping(value = "/password/forgot", method = RequestMethod.PUT)
+    public String resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return forgotPasswordService.resetPassword(resetPasswordRequest);
     }
 
 }
