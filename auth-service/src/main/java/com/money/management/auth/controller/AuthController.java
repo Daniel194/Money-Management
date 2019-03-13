@@ -2,16 +2,14 @@ package com.money.management.auth.controller;
 
 
 import com.money.management.auth.payload.*;
+import com.money.management.auth.security.AuthenticationManagerService;
 import com.money.management.auth.security.TokenProviderService;
 import com.money.management.auth.service.ForgotPasswordService;
 import com.money.management.auth.service.UserService;
 import com.money.management.auth.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,20 +18,20 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManagerService authenticationManagerService;
     private TokenProviderService tokenProviderService;
     private UserService userService;
     private VerificationTokenService verificationTokenService;
     private ForgotPasswordService forgotPasswordService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager,
+    public AuthController(AuthenticationManagerService authenticationManagerService,
                           TokenProviderService tokenProviderService,
                           UserService userService,
                           VerificationTokenService verificationTokenService,
                           ForgotPasswordService forgotPasswordService) {
 
-        this.authenticationManager = authenticationManager;
+        this.authenticationManagerService = authenticationManagerService;
         this.tokenProviderService = tokenProviderService;
         this.userService = userService;
         this.verificationTokenService = verificationTokenService;
@@ -42,23 +40,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        Authentication authentication = authenticationManagerService.authenticate(loginRequest);
         String token = tokenProviderService.createToken(authentication);
+
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-
         userService.create(signUpRequest);
 
         return ResponseEntity.ok(new ApiResponse(true, "User registered successfully !"));
