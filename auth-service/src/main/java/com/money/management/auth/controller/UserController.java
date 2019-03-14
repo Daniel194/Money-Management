@@ -1,5 +1,6 @@
 package com.money.management.auth.controller;
 
+import com.money.management.auth.payload.ApiResponse;
 import com.money.management.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,9 @@ public class UserController {
 
     @RequestMapping(value = "/change/password", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public void changePassword(Principal principal, @Valid @RequestBody String password) {
+    public ApiResponse changePassword(Principal principal, @Valid @RequestBody String password) {
         userService.changePassword(principal.getName(), password);
+
+        return new ApiResponse(true, "The password has been changed !");
     }
 }

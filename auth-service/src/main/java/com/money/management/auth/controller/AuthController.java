@@ -8,7 +8,6 @@ import com.money.management.auth.service.ForgotPasswordService;
 import com.money.management.auth.service.UserService;
 import com.money.management.auth.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,38 +38,46 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public AuthResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManagerService.authenticate(loginRequest);
         String token = tokenProviderService.createToken(authentication);
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        return new AuthResponse(token);
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ApiResponse registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         userService.create(signUpRequest);
 
-        return ResponseEntity.ok(new ApiResponse(true, "User registered successfully !"));
+        return new ApiResponse(true, "User registered successfully !");
     }
 
     @RequestMapping(value = "/verification", method = RequestMethod.GET)
-    public String mailVerification(@RequestParam("token") String token) {
-        return verificationTokenService.enableUser(token);
+    public ApiResponse mailVerification(@RequestParam("token") String token) {
+        String message = verificationTokenService.enableUser(token);
+
+        return new ApiResponse(true, message);
     }
 
     @RequestMapping(value = "/verification/resend", method = RequestMethod.GET)
-    public String resendMailVerification(@RequestParam("email") String email) {
-        return verificationTokenService.resendMailVerification(email);
+    public ApiResponse resendMailVerification(@RequestParam("email") String email) {
+        verificationTokenService.resendMailVerification(email);
+
+        return new ApiResponse(true, "The verification email has been resent !");
     }
 
     @RequestMapping(value = "/password/forgot", method = RequestMethod.GET)
-    public String sendForgotPasswordMail(@RequestParam("email") String email) {
-        return forgotPasswordService.sendEmail(email);
+    public ApiResponse sendForgotPasswordMail(@RequestParam("email") String email) {
+        forgotPasswordService.sendEmail(email);
+
+        return new ApiResponse(true, "An email has been sent !");
     }
 
     @RequestMapping(value = "/password/forgot", method = RequestMethod.PUT)
-    public String resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        return forgotPasswordService.resetPassword(resetPasswordRequest);
+    public ApiResponse resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        forgotPasswordService.resetPassword(resetPasswordRequest);
+
+        return new ApiResponse(true, "The password was changed successfully !");
     }
 
 }

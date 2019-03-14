@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,19 +27,6 @@ public class UserServiceImpl implements UserService {
         this.repository = repository;
         this.encoder = encoder;
         this.eventPublisher = eventPublisher;
-    }
-
-    @Override
-    public void create(User user) {
-        User existing = repository.findUsersByUsername(user.getUsername());
-        Assert.isNull(existing, "User already exists: " + user.getUsername());
-
-        setUserValues(user);
-
-        repository.save(user);
-        log.info("New user has been created: {}", user.getUsername());
-
-        sendVerificationEmail(user);
     }
 
     @Override
@@ -63,6 +49,7 @@ public class UserServiceImpl implements UserService {
     public void changePassword(String name, String password) {
         User user = repository.findUsersByUsername(name);
         user.setPassword(encoder.encode(password));
+
         repository.save(user);
     }
 

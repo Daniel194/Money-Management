@@ -1,6 +1,7 @@
 package com.money.management.auth.service.impl;
 
 import com.money.management.auth.domain.ForgotPasswordToken;
+import com.money.management.auth.exception.BadRequestException;
 import com.money.management.auth.payload.ResetPasswordRequest;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.listener.event.OnForgotPasswordCompleteEvent;
@@ -36,17 +37,11 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public String sendEmail(String email) {
+    public void sendEmail(String email) {
         User user = userRepository.findUsersByUsername(email);
-        String message = verifyUser(user);
-
-        if (message != null) {
-            return message;
-        }
+        verifyUser(user);
 
         eventPublisher.publishEvent(new OnForgotPasswordCompleteEvent(user));
-
-        return null;
     }
 
     @Override
@@ -62,34 +57,30 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         Optional<ForgotPasswordToken> optional = repository.findById(resetPasswordRequest.getToken());
 
         if (optional.isEmpty()) {
-            return "The token is invalid !";
+            throw new BadRequestException("The token is invalid !");
         }
 
         ForgotPasswordToken token = optional.get();
 
         if (token.getExpireDate().isBefore(LocalDateTime.now())) {
-            return "Forgot password toke has expired !";
+            throw new BadRequestException("Forgot password toke has expired !");
         }
 
         updateUserPassword(token.getUser(), resetPasswordRequest.getPassword());
-
-        return "The password was changed successfully !";
     }
 
-    private String verifyUser(User user) {
+    private void verifyUser(User user) {
         if (user == null) {
-            return "User doesn't exist, please register !";
+            throw new BadRequestException("User doesn't exist, please register !");
         }
 
         if (!user.isEnabled()) {
-            return "The user isn't enabled !";
+            throw new BadRequestException("The user isn't enabled !");
         }
-
-        return null;
     }
 
     private void updateUserPassword(User user, String password) {

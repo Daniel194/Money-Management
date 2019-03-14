@@ -2,6 +2,7 @@ package com.money.management.auth.service.impl;
 
 import com.money.management.auth.domain.User;
 import com.money.management.auth.domain.VerificationToken;
+import com.money.management.auth.exception.BadRequestException;
 import com.money.management.auth.listener.event.OnResendVerificationEmailCompleteEvent;
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.repository.VerificationTokenRepository;
@@ -44,39 +45,28 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Override
     public String enableUser(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-        String message = verifyToken(verificationToken);
 
-        if (message != null) {
-            return message;
-        }
+        verifyToken(verificationToken);
 
         return enableUser(verificationToken.getUser());
     }
 
     @Override
-    public String resendMailVerification(String email) {
-        String message = verifyUser(email);
-
-        if (message != null) {
-            return message;
-        }
+    public void resendMailVerification(String email) {
+        verifyUser(email);
 
         VerificationToken verificationToken = updateUserVerificationToken(email);
         eventPublisher.publishEvent(new OnResendVerificationEmailCompleteEvent(verificationToken));
-
-        return null;
     }
 
-    private String verifyToken(VerificationToken verificationToken) {
+    private void verifyToken(VerificationToken verificationToken) {
         if (verificationToken == null) {
-            return "Invalid Token !";
+            throw new BadRequestException("Invalid Token !");
         }
 
         if (verificationToken.getExpireDate().isBefore(LocalDateTime.now())) {
-            return "Verification toke has expired !";
+            throw new BadRequestException("Verification toke has expired !");
         }
-
-        return null;
     }
 
     private String enableUser(User user) {
@@ -90,18 +80,16 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         return "The user was enabled, you can now login in the application !";
     }
 
-    private String verifyUser(String username) {
+    private void verifyUser(String username) {
         User user = userRepository.findUsersByUsername(username);
 
         if (user == null) {
-            return "User doesn't exist, please register !";
+            throw new BadRequestException("User doesn't exist, please register !");
         }
 
         if (user.isEnabled()) {
-            return "The user was already enabled !";
+            throw new BadRequestException("The user was already enabled !");
         }
-
-        return null;
     }
 
     private VerificationToken updateUserVerificationToken(String email) {
