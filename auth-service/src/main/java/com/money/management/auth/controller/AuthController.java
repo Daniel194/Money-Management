@@ -37,7 +37,7 @@ public class AuthController {
         this.forgotPasswordService = forgotPasswordService;
     }
 
-    @PostMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public AuthResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManagerService.authenticate(loginRequest);
         String token = tokenProviderService.createToken(authentication);
@@ -45,7 +45,7 @@ public class AuthController {
         return new AuthResponse(token);
     }
 
-    @PostMapping("/sign-up")
+    @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
     public ApiResponse registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         userService.create(signUpRequest);
 
