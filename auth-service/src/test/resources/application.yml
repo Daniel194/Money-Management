@@ -47,3 +47,10 @@ spring:
             fallback: false
           ssl:
             enable: true
+
+app:
+  auth:
+    tokenSecret: TEST
+    tokenExpirationMsec: 123
+  oauth2:
+    authorizedRedirectUris: test
