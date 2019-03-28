@@ -21,7 +21,7 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     private static final String CLIENT_CREDENTIAL = "client_credentials";
     private static final String SERVER = "server";
 
-    private TokenStore tokenStore = new InMemoryTokenStore();
+    private final TokenStore tokenStore = new InMemoryTokenStore();
 
     @Autowired
     private UserDetailsService userDetailsService;
