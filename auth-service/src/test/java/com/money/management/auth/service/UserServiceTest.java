@@ -34,24 +34,9 @@ public class UserServiceTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
 
-    private User user;
-
     @Before
     public void setup() {
-        this.user = UserUtil.getUser();
         initMocks(this);
-    }
-
-    @Test
-    public void shouldCreateUser() {
-        userService.create(user);
-        verify(repository, times(1)).save(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldFailWhenUserAlreadyExists() {
-        when(repository.findUsersByUsername(user.getUsername())).thenReturn(new User());
-        userService.create(user);
     }
 
     @Test

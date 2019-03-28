@@ -9,5 +9,5 @@ public interface VerificationTokenService {
 
     String enableUser(String token);
 
-    String resendMailVerification(String email);
+    void resendMailVerification(String email);
 }

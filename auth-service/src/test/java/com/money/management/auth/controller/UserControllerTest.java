@@ -1,14 +1,7 @@
 package com.money.management.auth.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.money.management.auth.AuthApplication;
-import com.money.management.auth.domain.ResetPassword;
-import com.money.management.auth.domain.User;
-import com.money.management.auth.service.ForgotPasswordService;
 import com.money.management.auth.service.UserService;
-import com.money.management.auth.service.VerificationTokenService;
-import com.money.management.auth.util.UserUtil;
 import com.sun.security.auth.UserPrincipal;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,102 +15,35 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AuthApplication.class)
 @WebAppConfiguration
 public class UserControllerTest {
 
-    private static final String MESSAGE = "TEST";
-    private static final String EMAIL = "test@test.com";
-
-    private static final ObjectMapper mapper = new ObjectMapper();
-
     @InjectMocks
-    private UserController accountController;
+    private UserController userController;
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private VerificationTokenService verificationTokenService;
-
-    @Mock
-    private ForgotPasswordService forgotPasswordService;
 
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-    }
-
-    @Test
-    public void shouldCreateNewUser() throws Exception {
-        User user = UserUtil.getUser();
-
-        String json = mapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/users/create").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldFailWhenUserIsNotValid() throws Exception {
-        mockMvc.perform(post("/users/create"))
-                .andExpect(status().isBadRequest());
+        this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
     public void shouldReturnCurrentUser() throws Exception {
-        mockMvc.perform(get("/users/current").principal(new UserPrincipal("test")))
+        mockMvc.perform(get("/user/current").principal(new UserPrincipal("test")))
                 .andExpect(jsonPath("$.name").value("test"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldReturnConfirmationMessage() throws Exception {
-        when(verificationTokenService.enableUser("12345")).thenReturn(MESSAGE);
-
-        mockMvc.perform(get("/users/verification?token=12345"))
-                .andExpect(content().string(MESSAGE))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldResendVerificationEmail() throws Exception {
-        when(verificationTokenService.resendMailVerification(EMAIL)).thenReturn(MESSAGE);
-
-        mockMvc.perform(get("/users/verification/resend?email=" + EMAIL))
-                .andExpect(content().string(MESSAGE))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldSendForgotPasswordUrl() throws Exception {
-        when(forgotPasswordService.sendEmail(EMAIL)).thenReturn(MESSAGE);
-
-        mockMvc.perform(get("/users/password/forgot?email=" + EMAIL))
-                .andExpect(content().string(MESSAGE))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldResetPassword() throws Exception {
-        ResetPassword resetPassword = new ResetPassword();
-        resetPassword.setPassword("password01");
-        resetPassword.setToken("12345");
-
-        when(forgotPasswordService.resetPassword(resetPassword)).thenReturn(MESSAGE);
-
-        String json = mapper.writeValueAsString(resetPassword);
-
-        mockMvc.perform(put("/users/password/forgot").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
     }
 
@@ -126,8 +52,9 @@ public class UserControllerTest {
         String email = "test@test.com";
         String password = "12345";
 
-        mockMvc.perform(post("/users/change/password").contentType(MediaType.TEXT_PLAIN_VALUE).content(password)
+        mockMvc.perform(post("/user/change/password").contentType(MediaType.TEXT_PLAIN_VALUE).content(password)
                 .principal(new UserPrincipal(email)))
+                .andExpect(jsonPath("$.message").value("The password has been changed !"))
                 .andExpect(status().isOk());
     }
 

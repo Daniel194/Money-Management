@@ -3,6 +3,7 @@ package com.money.management.auth.service;
 import com.money.management.auth.AuthApplication;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.domain.VerificationToken;
+import com.money.management.auth.exception.BadRequestException;
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.repository.VerificationTokenRepository;
 import com.money.management.auth.service.impl.VerificationTokenServiceImpl;
@@ -20,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -70,18 +70,15 @@ public class VerificationTokenTest {
         assertThat(enableUser.isEnabled(), is(true));
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void invalidToken() {
-        String message = executeEnableUser(null);
-        assertThat(message, is("Invalid Token !"));
+        executeEnableUser(null);
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void verificationTokeHasExpired() {
         VerificationToken verificationToken = getVerificationToken(LocalDateTime.now());
-        String message = executeEnableUser(verificationToken);
-
-        assertThat(message, is("Verification toke has expired !"));
+        executeEnableUser(verificationToken);
     }
 
     @Test
@@ -93,17 +90,15 @@ public class VerificationTokenTest {
         assertThat(message, is("The user is already enabled !"));
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void resendVerificationTokenWhenUserNotExist() {
         String email = "test@test.com";
         when(userRepository.findUsersByUsername(email)).thenReturn(null);
 
-        String message = service.resendMailVerification(email);
-
-        assertThat(message, is("User doesn't exist, please register !"));
+        service.resendMailVerification(email);
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void resendVerificationTokenWhenUserIsEnabled() {
         String email = "test@test.com";
         User user = UserUtil.getUser();
@@ -111,9 +106,7 @@ public class VerificationTokenTest {
 
         when(userRepository.findUsersByUsername(email)).thenReturn(user);
 
-        String message = service.resendMailVerification(email);
-
-        assertThat(message, is("The user was already enabled !"));
+        service.resendMailVerification(email);
     }
 
     @Test
@@ -125,9 +118,7 @@ public class VerificationTokenTest {
         when(userRepository.findUsersByUsername(email)).thenReturn(user);
         when(verificationTokenRepository.findByUserUsername(email)).thenReturn(verificationToken);
 
-        String message = service.resendMailVerification(email);
-
-        assertThat(message, is(nullValue()));
+        service.resendMailVerification(email);
     }
 
     private String executeEnableUser(VerificationToken verificationToken) {

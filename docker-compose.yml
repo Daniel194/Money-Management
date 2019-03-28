@@ -117,12 +117,12 @@ services:
         max-size: "10m"
         max-file: "10"
 
-  user-interface:
-      image: daniel194/money-management-user-interface
-      links:
-        - gateway
-      restart: always
-      logging:
-        options:
-          max-size: "10m"
-          max-file: "10"
+#  user-interface:
+#      image: daniel194/money-management-user-interface
+#      links:
+#        - gateway
+#      restart: always
+#      logging:
+#        options:
+#          max-size: "10m"
+#          max-file: "10"

@@ -50,7 +50,7 @@ services:
     ports:
       - 28000:27017
 
-  user-interface:
-    build: user-interface
-    ports:
-      - 4200:4200
+#  user-interface:
+#    build: user-interface
+#    ports:
+#      - 4200:4200
