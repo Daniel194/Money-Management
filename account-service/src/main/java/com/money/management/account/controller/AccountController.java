@@ -1,7 +1,6 @@
 package com.money.management.account.controller;
 
 import com.money.management.account.domain.Account;
-import com.money.management.account.domain.User;
 import com.money.management.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +27,7 @@ public class AccountController {
 
     @RequestMapping(path = "/current", method = RequestMethod.GET)
     public Account getCurrentAccount(Principal principal) {
-        return accountService.findByName(principal.getName());
+        return accountService.findByName(principal);
     }
 
     @RequestMapping(path = "/current", method = RequestMethod.PUT)
@@ -36,8 +35,4 @@ public class AccountController {
         accountService.saveChanges(principal.getName(), account);
     }
 
-    @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public Account createNewAccount(@Valid @RequestBody User user) {
-        return accountService.create(user);
-    }
 }

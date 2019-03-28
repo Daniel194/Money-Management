@@ -63,9 +63,11 @@ public class AccountControllerTest {
         Account account = new Account();
         account.setName("test@test.com");
 
-        when(accountService.findByName(account.getName())).thenReturn(account);
+        UserPrincipal userPrincipal = new UserPrincipal(account.getName());
 
-        mockMvc.perform(get("/current").principal(new UserPrincipal(account.getName())))
+        when(accountService.findByName(userPrincipal)).thenReturn(account);
+
+        mockMvc.perform(get("/current").principal(userPrincipal))
                 .andExpect(jsonPath("$.name").value(account.getName()))
                 .andExpect(status().isOk());
     }
@@ -89,31 +91,6 @@ public class AccountControllerTest {
         String json = mapper.writeValueAsString(account);
 
         mockMvc.perform(put("/current").principal(new UserPrincipal(account.getName()))
-                .contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldRegisterNewAccount() throws Exception {
-        User user = new User();
-        user.setUsername("test@test.com");
-        user.setPassword("password");
-
-        String json = mapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/create").principal(new UserPrincipal("test"))
-                .contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldFailOnValidationTryingToRegisterNewAccount() throws Exception {
-        User user = new User();
-        user.setUsername("t");
-
-        String json = mapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/create").principal(new UserPrincipal("test"))
                 .contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isBadRequest());
     }
