@@ -1,12 +1,13 @@
 package com.money.management.account.service;
 
 import com.money.management.account.AccountApplication;
-import com.money.management.account.client.AuthServiceClient;
 import com.money.management.account.client.StatisticsServiceClient;
 import com.money.management.account.domain.*;
+import com.money.management.account.exception.BadRequestException;
 import com.money.management.account.repository.AccountRepository;
 import com.money.management.account.util.AccountUtil;
 import com.money.management.account.util.ItemUtil;
+import com.sun.security.auth.UserPrincipal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -35,9 +37,6 @@ public class AccountServiceTest {
     private StatisticsServiceClient statisticsClient;
 
     @Mock
-    private AuthServiceClient authClient;
-
-    @Mock
     private AccountRepository repository;
 
     @Before
@@ -50,25 +49,44 @@ public class AccountServiceTest {
         Account account = new Account();
         account.setName("test@test.com");
 
-        when(accountService.findByName(account.getName())).thenReturn(account);
+        when(repository.findByName(account.getName())).thenReturn(Optional.of(account));
         Account found = accountService.findByName(account.getName());
 
         assertEquals(account, found);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldFailWhenNameIsEmpty() {
+        when(accountService.findByName("")).thenReturn(null);
+
         accountService.findByName("");
     }
 
     @Test
-    public void shouldCreateAccountWithGivenUser() {
-        User user = new User();
-        user.setUsername("test@test.com");
+    public void shouldFindByPrincipal() {
+        String userName = "test@test.com";
+        UserPrincipal userPrincipal = new UserPrincipal(userName);
 
-        Account account = accountService.create(user);
+        Account account = new Account();
+        account.setName(userName);
 
-        assertEquals(user.getUsername(), account.getName());
+        when(repository.findByName(userName)).thenReturn(Optional.of(account));
+
+        Account found = accountService.findByName(userPrincipal);
+
+        assertEquals(account, found);
+    }
+
+    @Test
+    public void shouldCreateAccount() {
+        String userName = "test@test.com";
+        UserPrincipal userPrincipal = new UserPrincipal(userName);
+
+        when(repository.findByName(userName)).thenReturn(Optional.empty());
+
+        Account account = accountService.findByName(userPrincipal);
+
+        assertEquals(userName, account.getName());
         assertEquals(0, account.getSaving().getAmount().intValue());
         assertEquals(Currency.getDefault(), account.getSaving().getCurrency());
         assertEquals(0, account.getSaving().getInterest().intValue());
@@ -76,7 +94,6 @@ public class AccountServiceTest {
         assertEquals(false, account.getSaving().getCapitalization());
         assertNotNull(account.getLastSeen());
 
-        verify(authClient, times(1)).createUser(user);
         verify(repository, times(1)).save(account);
     }
 
@@ -85,7 +102,7 @@ public class AccountServiceTest {
         Account update = AccountUtil.getAccount(ItemUtil.getGrocery());
         Account account = new Account();
 
-        when(accountService.findByName("test@test.com")).thenReturn(account);
+        when(repository.findByName("test@test.com")).thenReturn(Optional.of(account));
         accountService.saveChanges("test@test.com", update);
 
         assertEquals(update.getNote(), account.getNote());
@@ -116,13 +133,14 @@ public class AccountServiceTest {
         verify(statisticsClient, times(1)).updateStatistics("test@test.com", account);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldFailWhenNoAccountsExistedWithGivenName() {
         Account update = new Account();
         update.setIncomes(Collections.singletonList(new Item()));
         update.setExpenses(Collections.singletonList(new Item()));
 
-        when(accountService.findByName("test@test.com")).thenReturn(null);
+        when(repository.findByName("test@test.com")).thenReturn(Optional.empty());
+
         accountService.saveChanges("test@test.com", update);
     }
 }

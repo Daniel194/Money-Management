@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.util.Assert.notNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AccountApplication.class)
@@ -25,7 +26,9 @@ public class AccountRepositoryTest {
         Account stub = AccountUtil.getAccount(ItemUtil.getGrocery(), ItemUtil.getVacation());
         repository.save(stub);
 
-        Account found = repository.findByName(stub.getName());
+        Account found = repository.findByName(stub.getName()).orElse(null);
+
+        notNull(found, "The account doesn't exist !");
         assertEquals(stub.getLastSeen(), found.getLastSeen());
         assertEquals(stub.getNote(), found.getNote());
         assertEquals(stub.getIncomes().size(), found.getIncomes().size());

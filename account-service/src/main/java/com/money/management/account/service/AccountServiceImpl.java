@@ -1,5 +1,6 @@
 package com.money.management.account.service;
 
+import com.money.management.account.exception.BadRequestException;
 import com.money.management.account.repository.AccountRepository;
 import com.money.management.account.client.StatisticsServiceClient;
 import com.money.management.account.domain.Account;
@@ -9,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -33,27 +34,22 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByName(String accountName) {
-        Assert.hasLength(accountName, "Account name is empty !");
-        return repository.findByName(accountName);
+        Optional<Account> account = repository.findByName(accountName);
+
+        return account.orElseThrow(() -> new BadRequestException("The account " + accountName + " doesn't exist !"));
     }
 
     @Override
     public Account findByName(Principal principal) {
-        Account existing = repository.findByName(principal.getName());
-        Assert.isNull(existing, "Account already exists: " + principal.getName());
+        Optional<Account> account = repository.findByName(principal.getName());
 
-        Account account = createAccount(principal.getName());
-        repository.save(account);
-
-        log.info("New account has been created: {}", account.getName());
-
-        return account;
+        return account.orElse(createAccount(principal.getName()));
     }
 
     @Override
     public void saveChanges(String name, Account update) {
-        Account account = repository.findByName(name);
-        Assert.notNull(account, "Can't find account with name " + name);
+        Optional<Account> optionalAccount = repository.findByName(name);
+        Account account = optionalAccount.orElseThrow(() -> new BadRequestException("Can't find account with name " + name));
 
         updateAccount(account, update);
         repository.save(account);
@@ -75,6 +71,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private Account createAccount(String userName) {
+        Account account = getAccount(userName);
+
+        repository.save(account);
+
+        log.info("New account has been created: {}", account.getName());
+
+        return account;
+    }
+
+    private Account getAccount(String userName) {
         Account account = new Account();
         account.setName(userName);
         account.setLastSeen(new Date());
