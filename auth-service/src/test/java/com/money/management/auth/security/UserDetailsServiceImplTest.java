@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -38,7 +40,7 @@ public class UserDetailsServiceImplTest {
     public void shouldLoadByUsernameWhenUserExists() {
         User user = new User();
 
-        when(repository.findUsersByUsername(any())).thenReturn(user);
+        when(repository.findUsersByUsername(any())).thenReturn(Optional.of(user));
         UserDetails loaded = service.loadUserByUsername("name");
 
         assertEquals(user, loaded);

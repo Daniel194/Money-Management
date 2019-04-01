@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -43,7 +45,7 @@ public class UserServiceTest {
     public void shouldUpdateUserPassword() {
         User user = UserUtil.getUser();
 
-        when(repository.findUsersByUsername(user.getUsername())).thenReturn(user);
+        when(repository.findUsersByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         userService.changePassword(user.getUsername(), "12345");
 

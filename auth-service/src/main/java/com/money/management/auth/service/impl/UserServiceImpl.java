@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(SignUpRequest signUpRequest) {
-        User existing = repository.findUsersByUsername(signUpRequest.getEmail());
+        User existing = repository.findUsersByUsername(signUpRequest.getEmail()).orElse(null);
 
         if (existing != null) {
             throw new BadRequestException("User already exists: " + existing.getUsername());
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String name, String password) {
-        User user = repository.findUsersByUsername(name);
+        User user = repository.findUsersByUsername(name).orElseThrow(() -> new BadRequestException("User doesn't exist !"));
         user.setPassword(encoder.encode(password));
 
         repository.save(user);

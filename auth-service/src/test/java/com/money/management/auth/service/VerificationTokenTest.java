@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -93,7 +94,7 @@ public class VerificationTokenTest {
     @Test(expected = BadRequestException.class)
     public void resendVerificationTokenWhenUserNotExist() {
         String email = "test@test.com";
-        when(userRepository.findUsersByUsername(email)).thenReturn(null);
+        when(userRepository.findUsersByUsername(email)).thenReturn(Optional.empty());
 
         service.resendMailVerification(email);
     }
@@ -104,7 +105,7 @@ public class VerificationTokenTest {
         User user = UserUtil.getUser();
         user.setEnabled(true);
 
-        when(userRepository.findUsersByUsername(email)).thenReturn(user);
+        when(userRepository.findUsersByUsername(email)).thenReturn(Optional.of(user));
 
         service.resendMailVerification(email);
     }
@@ -115,7 +116,7 @@ public class VerificationTokenTest {
         User user = UserUtil.getUser();
         VerificationToken verificationToken = getVerificationToken(LocalDateTime.now());
 
-        when(userRepository.findUsersByUsername(email)).thenReturn(user);
+        when(userRepository.findUsersByUsername(email)).thenReturn(Optional.of(user));
         when(verificationTokenRepository.findByUserUsername(email)).thenReturn(verificationToken);
 
         service.resendMailVerification(email);

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AuthApplication.class)
@@ -24,7 +25,8 @@ public class UserRepositoryTest {
 
         repository.save(user);
 
-        User found = repository.findUsersByUsername(user.getUsername());
+        User found = repository.findUsersByUsername(user.getUsername()).orElse(null);
+        assertNotNull("The user doesn't exist !", found);
         assertEquals(user.getUsername(), found.getUsername());
         assertEquals(user.getPassword(), found.getPassword());
     }

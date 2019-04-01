@@ -38,8 +38,11 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
     @Override
     public void sendEmail(String email) {
-        User user = userRepository.findUsersByUsername(email);
-        verifyUser(user);
+        User user = userRepository.findUsersByUsername(email).orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
+
+        if (!user.isEnabled()) {
+            throw new BadRequestException("The user isn't enabled !");
+        }
 
         eventPublisher.publishEvent(new OnForgotPasswordCompleteEvent(user));
     }
@@ -71,16 +74,6 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
         }
 
         updateUserPassword(token.getUser(), resetPasswordRequest.getPassword());
-    }
-
-    private void verifyUser(User user) {
-        if (user == null) {
-            throw new BadRequestException("User doesn't exist, please register !");
-        }
-
-        if (!user.isEnabled()) {
-            throw new BadRequestException("The user isn't enabled !");
-        }
     }
 
     private void updateUserPassword(User user, String password) {

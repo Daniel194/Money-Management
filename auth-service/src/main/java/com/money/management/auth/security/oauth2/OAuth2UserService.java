@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
@@ -42,9 +44,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
         String email = getEmail(oAuth2UserInfo);
-        User user = userRepository.findUsersByUsername(email);
+        Optional<User> userOptional = userRepository.findUsersByUsername(email);
+        User user;
 
-        if (user != null) {
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
             verifyUserProvider(user, oAuth2UserRequest);
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);

@@ -1,7 +1,6 @@
 package com.money.management.auth.security.impl;
 
 import com.money.management.auth.repository.UserRepository;
-import com.money.management.auth.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,12 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = repository.findUsersByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-
-        return user;
+        return repository.findUsersByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

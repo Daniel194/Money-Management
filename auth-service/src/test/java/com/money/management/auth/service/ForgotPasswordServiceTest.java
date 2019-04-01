@@ -48,7 +48,7 @@ public class ForgotPasswordServiceTest {
     public void shouldNotSendEmailForUnregisteredUser() {
         String email = "test@test.com";
 
-        when(userRepository.findUsersByUsername(email)).thenReturn(null);
+        when(userRepository.findUsersByUsername(email)).thenReturn(Optional.empty());
 
         service.sendEmail(email);
     }
@@ -57,7 +57,7 @@ public class ForgotPasswordServiceTest {
     public void shouldNotSendEmailToNotEnabledUser() {
         User user = UserUtil.getUser();
 
-        when(userRepository.findUsersByUsername(user.getUsername())).thenReturn(user);
+        when(userRepository.findUsersByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         service.sendEmail(user.getUsername());
     }
@@ -67,7 +67,7 @@ public class ForgotPasswordServiceTest {
         User user = UserUtil.getUser();
         user.setEnabled(true);
 
-        when(userRepository.findUsersByUsername(user.getUsername())).thenReturn(user);
+        when(userRepository.findUsersByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         service.sendEmail(user.getUsername());
     }

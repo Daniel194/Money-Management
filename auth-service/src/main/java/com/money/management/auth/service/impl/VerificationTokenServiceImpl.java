@@ -81,11 +81,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     private void verifyUser(String username) {
-        User user = userRepository.findUsersByUsername(username);
-
-        if (user == null) {
-            throw new BadRequestException("User doesn't exist, please register !");
-        }
+        User user = userRepository.findUsersByUsername(username).orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
 
         if (user.isEnabled()) {
             throw new BadRequestException("The user was already enabled !");
