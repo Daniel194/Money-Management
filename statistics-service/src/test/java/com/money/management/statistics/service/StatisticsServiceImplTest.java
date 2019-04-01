@@ -8,6 +8,8 @@ import com.money.management.statistics.domain.timeseries.DataPoint;
 import com.money.management.statistics.domain.timeseries.ItemMetric;
 import com.money.management.statistics.domain.timeseries.StatisticMetric;
 import com.money.management.statistics.repository.DataPointRepository;
+import com.money.management.statistics.service.impl.ExchangeRatesServiceImpl;
+import com.money.management.statistics.service.impl.StatisticsServiceImpl;
 import com.money.management.statistics.util.AccountUtil;
 import com.money.management.statistics.util.ItemUtil;
 import com.money.management.statistics.util.SavingUtil;

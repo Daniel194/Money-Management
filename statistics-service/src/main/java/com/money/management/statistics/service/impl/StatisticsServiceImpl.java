@@ -1,4 +1,4 @@
-package com.money.management.statistics.service;
+package com.money.management.statistics.service.impl;
 
 import com.google.common.collect.ImmutableMap;
 import com.money.management.statistics.domain.*;
@@ -7,6 +7,8 @@ import com.money.management.statistics.domain.timeseries.DataPointId;
 import com.money.management.statistics.domain.timeseries.ItemMetric;
 import com.money.management.statistics.repository.DataPointRepository;
 import com.money.management.statistics.domain.timeseries.StatisticMetric;
+import com.money.management.statistics.service.ExchangeRatesService;
+import com.money.management.statistics.service.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

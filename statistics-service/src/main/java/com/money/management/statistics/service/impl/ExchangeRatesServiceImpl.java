@@ -1,9 +1,10 @@
-package com.money.management.statistics.service;
+package com.money.management.statistics.service.impl;
 
 import com.google.common.collect.ImmutableMap;
 import com.money.management.statistics.client.ExchangeRatesClient;
 import com.money.management.statistics.domain.Currency;
 import com.money.management.statistics.domain.ExchangeRatesContainer;
+import com.money.management.statistics.service.ExchangeRatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

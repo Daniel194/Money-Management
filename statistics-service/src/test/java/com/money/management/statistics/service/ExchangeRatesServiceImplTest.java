@@ -5,6 +5,7 @@ import com.money.management.statistics.StatisticsApplication;
 import com.money.management.statistics.client.ExchangeRatesClient;
 import com.money.management.statistics.domain.Currency;
 import com.money.management.statistics.domain.ExchangeRatesContainer;
+import com.money.management.statistics.service.impl.ExchangeRatesServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
