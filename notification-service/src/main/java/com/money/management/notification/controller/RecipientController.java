@@ -23,12 +23,12 @@ public class RecipientController {
     }
 
     @RequestMapping(path = "/current", method = RequestMethod.GET)
-    public Object getCurrentNotificationsSettings(Principal principal) {
+    public Recipient getCurrentNotificationsSettings(Principal principal) {
         return recipientService.findByAccountName(principal.getName());
     }
 
     @RequestMapping(path = "/current", method = RequestMethod.PUT)
-    public Object saveCurrentNotificationsSettings(Principal principal, @Valid @RequestBody Recipient recipient) {
+    public Recipient saveCurrentNotificationsSettings(Principal principal, @Valid @RequestBody Recipient recipient) {
         return recipientService.save(principal.getName(), recipient);
     }
 }

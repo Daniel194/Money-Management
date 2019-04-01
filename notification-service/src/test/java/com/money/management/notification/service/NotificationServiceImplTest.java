@@ -5,6 +5,7 @@ import com.money.management.notification.NotificationServiceApplication;
 import com.money.management.notification.client.AccountServiceClient;
 import com.money.management.notification.domain.NotificationType;
 import com.money.management.notification.domain.Recipient;
+import com.money.management.notification.service.impl.NotificationServiceImpl;
 import com.money.management.notification.util.RecipientUtil;
 import org.junit.Before;
 import org.junit.Test;

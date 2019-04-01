@@ -6,6 +6,7 @@ import com.money.management.notification.NotificationServiceApplication;
 import com.money.management.notification.domain.NotificationType;
 import com.money.management.notification.domain.Recipient;
 import com.money.management.notification.repository.RecipientRepository;
+import com.money.management.notification.service.impl.RecipientServiceImpl;
 import com.money.management.notification.util.NotificationUtil;
 import com.money.management.notification.util.RecipientUtil;
 import org.junit.Before;

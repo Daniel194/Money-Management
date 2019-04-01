@@ -1,7 +1,8 @@
-package com.money.management.notification.service;
+package com.money.management.notification.service.impl;
 
 import com.money.management.notification.domain.NotificationType;
 import com.money.management.notification.domain.Recipient;
+import com.money.management.notification.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
