@@ -1,4 +1,4 @@
-package com.money.management.notification;
+package com.money.management.account;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,12 +7,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = NotificationServiceApplication.class)
+@SpringBootTest(classes = AccountApplication.class)
 @WebAppConfiguration
-public class NotificationServiceApplicationTests {
+public class AccountApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+
+    }
 
 }

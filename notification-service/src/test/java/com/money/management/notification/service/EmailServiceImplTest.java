@@ -1,6 +1,6 @@
 package com.money.management.notification.service;
 
-import com.money.management.notification.NotificationServiceApplication;
+import com.money.management.notification.NotificationApplication;
 import com.money.management.notification.domain.NotificationType;
 import com.money.management.notification.domain.Recipient;
 import com.money.management.notification.service.impl.EmailServiceImpl;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = NotificationServiceApplication.class)
+@SpringBootTest(classes = NotificationApplication.class)
 @WebAppConfiguration
 public class EmailServiceImplTest {
     private final String subject = "subject";

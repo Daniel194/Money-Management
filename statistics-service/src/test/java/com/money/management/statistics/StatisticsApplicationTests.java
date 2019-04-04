@@ -1,4 +1,4 @@
-package com.money.management.auth;
+package com.money.management.statistics;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,9 +7,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = AuthApplication.class)
+@SpringBootTest(classes = StatisticsApplication.class)
 @WebAppConfiguration
-public class AuthServiceApplicationTests {
+public class StatisticsApplicationTests {
 
     @Test
     public void contextLoads() {

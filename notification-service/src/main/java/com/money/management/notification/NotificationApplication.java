@@ -31,10 +31,10 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties
 @EnableScheduling
-public class NotificationServiceApplication {
+public class NotificationApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NotificationServiceApplication.class, args);
+        SpringApplication.run(NotificationApplication.class, args);
     }
 
     @Bean

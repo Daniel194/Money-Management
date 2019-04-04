@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.money.management.notification.domain.Frequency;
 import com.money.management.notification.domain.NotificationSettings;
 import com.money.management.notification.domain.NotificationType;
-import com.money.management.notification.NotificationServiceApplication;
+import com.money.management.notification.NotificationApplication;
 import com.money.management.notification.domain.Recipient;
 import com.money.management.notification.util.NotificationUtil;
 import com.money.management.notification.util.RecipientUtil;
@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = NotificationServiceApplication.class)
+@SpringBootTest(classes = NotificationApplication.class)
 @WebAppConfiguration
 public class RecipientRepositoryTest {
 

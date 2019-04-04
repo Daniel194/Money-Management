@@ -1,7 +1,7 @@
 package com.money.management.notification.service;
 
 import com.google.common.collect.ImmutableList;
-import com.money.management.notification.NotificationServiceApplication;
+import com.money.management.notification.NotificationApplication;
 import com.money.management.notification.client.AccountServiceClient;
 import com.money.management.notification.domain.NotificationType;
 import com.money.management.notification.domain.Recipient;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = NotificationServiceApplication.class)
+@SpringBootTest(classes = NotificationApplication.class)
 @WebAppConfiguration
 public class NotificationServiceImplTest {
     private final Recipient withError = RecipientUtil.getRecipientWithError();

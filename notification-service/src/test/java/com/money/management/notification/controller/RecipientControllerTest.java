@@ -3,7 +3,7 @@ package com.money.management.notification.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.money.management.notification.domain.NotificationType;
-import com.money.management.notification.NotificationServiceApplication;
+import com.money.management.notification.NotificationApplication;
 import com.money.management.notification.domain.Recipient;
 import com.money.management.notification.service.RecipientService;
 import com.money.management.notification.util.NotificationUtil;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = NotificationServiceApplication.class)
+@SpringBootTest(classes = NotificationApplication.class)
 @WebAppConfiguration
 public class RecipientControllerTest {
 
