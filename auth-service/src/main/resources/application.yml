@@ -29,11 +29,11 @@ spring:
         registration:
           google:
             client-id: 98680346203-ocda096fo3f27enrbcotphf7i0mituqh.apps.googleusercontent.com
-              client-secret: sBEbZZgRAM04cjF4T0Mv3ZPb
-              redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
-              scope:
-                - email
-                - profile
+            client-secret: sBEbZZgRAM04cjF4T0Mv3ZPb
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
           facebook:
             client-id: 301931163845796
             client-secret: d1a7d45545b703b0034c64be457f6414
