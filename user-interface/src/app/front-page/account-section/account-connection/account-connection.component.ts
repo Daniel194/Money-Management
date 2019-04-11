@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {User} from '../../../domain/User';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../service/authentication.service";
 import {ToastrService} from "ngx-toastr";
 import {AccountSection} from "../account-section";
 import {PasswordErrorStateMatcher} from "../../../util/password-error-state-matcher";
 import {Router} from "@angular/router";
+import {AuthRequest} from "../../../domain/AuthRequest";
 
 @Component({
     selector: 'app-account-connection',
@@ -56,11 +56,11 @@ export class AccountConnectionComponent extends AccountSection {
     }
 
     onSubmitCreateAccount() {
-        let user = new User();
-        user.username = this.createAccountForm.controls.email.value;
-        user.password = this.createAccountForm.controls.password.value;
+        let authRequest = new AuthRequest();
+        authRequest.email = this.createAccountForm.controls.email.value;
+        authRequest.password = this.createAccountForm.controls.password.value;
 
-        this.authService.createUser(user).subscribe(
+        this.authService.createUser(authRequest).subscribe(
             () => this.displaySuccessMessage("The user was created successfully ! \n \n A verification email has been sent to you, " +
                 "please confirm it before to login !"),
             error => this.displayErrorMessage(error.error.message));
@@ -68,14 +68,14 @@ export class AccountConnectionComponent extends AccountSection {
     }
 
     onSubmitLogin() {
-        let user = new User();
-        user.username = this.loginForm.controls.email.value;
-        user.password = this.loginForm.controls.password.value;
+        let authRequest = new AuthRequest();
+        authRequest.email = this.loginForm.controls.email.value;
+        authRequest.password = this.loginForm.controls.password.value;
 
         console.log(this.loginForm.controls.rememberMe.value);
 
-        this.authService.obtainAccessToken(user).subscribe(
-            data => this.authService.saveCredentials(data, user.username, this.loginForm.controls.rememberMe.value),
+        this.authService.obtainAccessToken(authRequest).subscribe(
+            data => this.authService.saveCredentials(data, authRequest.email, this.loginForm.controls.rememberMe.value),
             error => this.displayErrorMessage(error.error.error_description))
     }
 

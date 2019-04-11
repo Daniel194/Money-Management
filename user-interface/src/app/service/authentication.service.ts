@@ -3,33 +3,27 @@ import {Router} from "@angular/router";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {Observable} from "rxjs/internal/Observable";
-import {User} from "../domain/User";
 import {ResetPassword} from "../domain/ResetPassword";
+import {ApiResponse} from "../domain/ApiResponse";
+import {AuthRequest} from "../domain/AuthRequest";
+import {AuthResponse} from "../domain/AuthResponse";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService {
-    private tokenRequest = 'api/uaa/oauth/token';
-    private currentAccount = 'api/accounts/current';
-    private createUserUrl = "api/accounts/create";
+    private tokenRequest = 'api/uaa/auth/login';
+    private createUserUrl = "api/uaa/auth/sign-up";
     private resendVerificationEmailUrl = "api/uaa/users/verification/resend";
     private forgotPasswordUrl = "api/uaa/users/password/forgot";
     private changePasswordUrl = "api/uaa/users/change/password";
+    private currentAccount = 'api/accounts/current';
 
     constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
     }
 
-    public obtainAccessToken(user: User): Observable<Object> {
-        let data = "scope=ui&grant_type=password&username=" + user.username + "&password=" + user.password;
-        let options = {
-            headers: new HttpHeaders({
-                'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                'Authorization': 'Basic YnJvd3Nlcjo='
-            })
-        };
-
-        return this.http.post(this.tokenRequest, data, options);
+    public obtainAccessToken(authRequest: AuthRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(this.tokenRequest, authRequest);
     }
 
     public updatePassword(password: String): Observable<void> {
@@ -67,8 +61,8 @@ export class AuthenticationService {
         return this.http.get<Account>(this.currentAccount, options);
     }
 
-    public createUser(user: User): Observable<Object> {
-        return this.http.post<Object>(this.createUserUrl, user);
+    public createUser(user: AuthRequest): Observable<ApiResponse> {
+        return this.http.post<ApiResponse>(this.createUserUrl, user);
     }
 
     public getOauthToken(): string {
