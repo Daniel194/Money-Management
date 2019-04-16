@@ -61,8 +61,7 @@ export class AccountConnectionComponent extends AccountSection {
         authRequest.password = this.createAccountForm.controls.password.value;
 
         this.authService.createUser(authRequest).subscribe(
-            () => this.displaySuccessMessage("The user was created successfully ! \n \n A verification email has been sent to you, " +
-                "please confirm it before to login !"),
+            response => this.displaySuccessMessage(response.message),
             error => this.displayErrorMessage(error.error.message));
 
     }
@@ -75,8 +74,8 @@ export class AccountConnectionComponent extends AccountSection {
         console.log(this.loginForm.controls.rememberMe.value);
 
         this.authService.obtainAccessToken(authRequest).subscribe(
-            data => this.authService.saveCredentials(data, authRequest.email, this.loginForm.controls.rememberMe.value),
-            error => this.displayErrorMessage(error.error.error_description))
+            data => this.authService.saveCredentials(data.accessToken, authRequest.email, this.loginForm.controls.rememberMe.value),
+            error => this.displayErrorMessage(error.error.message))
     }
 
     toggleFlip() {

@@ -12,21 +12,37 @@ import {AuthResponse} from "../domain/AuthResponse";
     providedIn: 'root'
 })
 export class AuthenticationService {
-    private tokenRequest = 'api/uaa/auth/login';
     private createUserUrl = "api/uaa/auth/sign-up";
-    private resendVerificationEmailUrl = "api/uaa/users/verification/resend";
-    private forgotPasswordUrl = "api/uaa/users/password/forgot";
+    private tokenRequest = 'api/uaa/auth/login';
+    private resendVerificationEmailUrl = "api/uaa/auth/verification/resend";
+    private forgotPasswordUrl = "api/uaa/auth/password/forgot";
+
     private changePasswordUrl = "api/uaa/users/change/password";
-    private currentAccount = 'api/accounts/current';
 
     constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
+    }
+
+    public createUser(user: AuthRequest): Observable<ApiResponse> {
+        return this.http.post<ApiResponse>(this.createUserUrl, user);
     }
 
     public obtainAccessToken(authRequest: AuthRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(this.tokenRequest, authRequest);
     }
 
-    public updatePassword(password: String): Observable<void> {
+    public resendVerificationEmail(email: String): Observable<ApiResponse> {
+        return this.http.get<ApiResponse>(this.resendVerificationEmailUrl + "?email=" + email);
+    }
+
+    public forgotPassword(email: String): Observable<ApiResponse> {
+        return this.http.get<ApiResponse>(this.forgotPasswordUrl + "?email=" + email);
+    }
+
+    public resetPassword(resetPassword: ResetPassword): Observable<ApiResponse> {
+        return this.http.put<ApiResponse>(this.forgotPasswordUrl, resetPassword);
+    }
+
+    public updatePassword(password: String): Observable<ApiResponse> {
         let token = this.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
@@ -34,35 +50,7 @@ export class AuthenticationService {
             headers: headers
         };
 
-        return this.http.post<void>(this.changePasswordUrl, password, options);
-    }
-
-    public resendVerificationEmail(email: String): Observable<String> {
-        return this.http.get(this.resendVerificationEmailUrl + "?email=" + email, {responseType: 'text'});
-    }
-
-    public forgotPassword(email: string): Observable<String> {
-        return this.http.get(this.forgotPasswordUrl + "?email=" + email, {responseType: 'text'});
-    }
-
-
-    public resetPassword(resetPassword: ResetPassword): Observable<String> {
-        return this.http.put(this.forgotPasswordUrl, resetPassword, {responseType: 'text'});
-    }
-
-    public getCurrentAccount(): Observable<Account> {
-        let token = this.getOauthToken();
-
-        let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-        let options = {
-            headers: headers
-        };
-
-        return this.http.get<Account>(this.currentAccount, options);
-    }
-
-    public createUser(user: AuthRequest): Observable<ApiResponse> {
-        return this.http.post<ApiResponse>(this.createUserUrl, user);
+        return this.http.post<ApiResponse>(this.changePasswordUrl, password, options);
     }
 
     public getOauthToken(): string {
