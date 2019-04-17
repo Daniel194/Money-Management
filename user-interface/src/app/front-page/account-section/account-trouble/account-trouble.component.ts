@@ -54,23 +54,15 @@ export class AccountTroubleComponent extends AccountSection {
     onForgotPasswordSubmit() {
         let email = this.forgotPassword.controls.email.value;
 
-        this.authService.forgotPassword(email).subscribe(message => this.displayMessage(message,
-            "An email has been sent !"));
+        this.authService.forgotPassword(email).subscribe(result => this.displaySuccessMessage(result.message),
+            error => this.displayErrorMessage(error.error.message));
     }
 
     onResendEmailSubmit() {
         let email = this.resendEmail.controls.email.value;
 
-        this.authService.resendVerificationEmail(email).subscribe(message => this.displayMessage(message,
-            "The verification email has been resent !"));
-    }
-
-    private displayMessage(message : String, successMessage : string) {
-        if (message == null || message == "") {
-            this.displaySuccessMessage(successMessage);
-        } else {
-            this.displayErrorMessage(message.toString());
-        }
+        this.authService.resendVerificationEmail(email).subscribe(result => this.displaySuccessMessage(result.message),
+            error => this.displayErrorMessage(error.error.message));
     }
 
     toggleFlip() {
