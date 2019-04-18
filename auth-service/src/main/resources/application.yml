@@ -84,7 +84,7 @@ verification:
   email:
     subject: "Verification email"
     text: "Hello, \n Bellow you have the email verification address. \n  {0} \r\n\r\nCheers,\r\nMoney Management team"
-    url: "http://localhost:80/uaa/users/verification?token="
+    url: "http://localhost:4200/verification?token="
 
 forgot-password:
   email:
