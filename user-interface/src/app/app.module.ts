@@ -21,6 +21,7 @@ import { AccountSectionComponent } from './front-page/account-section/account-se
 import { AccountTroubleComponent } from './front-page/account-section/account-trouble/account-trouble.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SettingsComponent } from './settings/settings.component';
+import { VerificationComponent } from './verification/verification.component';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import { SettingsComponent } from './settings/settings.component';
         AccountSectionComponent,
         AccountTroubleComponent,
         ForgotPasswordComponent,
-        SettingsComponent
+        SettingsComponent,
+        VerificationComponent
     ],
     bootstrap: [AppComponent],
     providers: [

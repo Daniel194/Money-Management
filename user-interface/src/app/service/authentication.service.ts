@@ -15,6 +15,7 @@ export class AuthenticationService {
     private createUserUrl = "api/uaa/auth/sign-up";
     private tokenRequest = 'api/uaa/auth/login';
     private resendVerificationEmailUrl = "api/uaa/auth/verification/resend";
+    private verificationEmailUrl = "api/uaa/auth/verification";
     private forgotPasswordUrl = "api/uaa/auth/password/forgot";
 
     private changePasswordUrl = "api/uaa/users/change/password";
@@ -40,6 +41,10 @@ export class AuthenticationService {
 
     public resetPassword(resetPassword: ResetPassword): Observable<ApiResponse> {
         return this.http.put<ApiResponse>(this.forgotPasswordUrl, resetPassword);
+    }
+
+    public verifyEmail(toke: String): Observable<ApiResponse> {
+        return this.http.get<ApiResponse>(this.verificationEmailUrl + '?token=' + toke);
     }
 
     public updatePassword(password: String): Observable<ApiResponse> {
