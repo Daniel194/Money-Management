@@ -7,7 +7,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MaterialModule} from "./material.modules";
 import {AppRouting} from "./app.routing";
 import {AccountConnectionComponent} from "./front-page/account-section/account-connection/account-connection.component";
-import {CookieService} from "ngx-cookie-service";
 import {FrontPageComponent} from './front-page/front-page.component';
 import {HttpClientModule} from "@angular/common/http";
 import {ToastrModule} from "ngx-toastr";
@@ -56,7 +55,6 @@ import { VerificationComponent } from './verification/verification.component';
     ],
     bootstrap: [AppComponent],
     providers: [
-        CookieService,
         DateFormatPipe
     ],
     entryComponents: [

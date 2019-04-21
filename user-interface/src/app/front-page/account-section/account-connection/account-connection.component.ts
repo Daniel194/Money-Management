@@ -75,7 +75,7 @@ export class AccountConnectionComponent extends AccountSection {
 
         this.authService.obtainAccessToken(authRequest).subscribe(
             data => this.authService.saveCredentials(data.accessToken, authRequest.email, this.loginForm.controls.rememberMe.value),
-            error => this.displayErrorMessage(error.error.message))
+            () => this.displayErrorMessage("Bad credentials !"))
     }
 
     toggleFlip() {
@@ -112,7 +112,7 @@ export class AccountConnectionComponent extends AccountSection {
     }
 
     private checkIfUserISLogin() {
-        if (this.authService.isUserLogin()) {
+        if (AuthenticationService.isUserLogin()) {
             this.router.navigate(['/statistics'])
         }
     }

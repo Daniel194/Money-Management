@@ -10,7 +10,7 @@ import {Account} from "../domain/Account";
 export class AccountService {
     private currentAccountUrl = 'api/accounts/current';
 
-    constructor(private http: HttpClient, private authService: AuthenticationService) {
+    constructor(private http: HttpClient) {
     }
 
     public getCurrentAccount(): Observable<Account> {
@@ -27,7 +27,7 @@ export class AccountService {
 
 
     public saveAccount(account: Account): Observable<void> {
-        let token = this.authService.getOauthToken();
+        let token = AuthenticationService.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
         let options = {
@@ -55,7 +55,7 @@ export class AccountService {
     }
 
     private createRequest(): Observable<Account> {
-        let token = this.authService.getOauthToken();
+        let token = AuthenticationService.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
         let options = {

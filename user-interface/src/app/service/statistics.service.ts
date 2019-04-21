@@ -11,12 +11,12 @@ export class StatisticsService {
     private currentAccountStatistics = 'api/statistics/current';
     private betweenAccountStatistics = 'api/statistics/between';
 
-    constructor(private http: HttpClient, private authService: AuthenticationService) {
+    constructor(private http: HttpClient) {
     }
 
 
     public getCurrentAccountStatistics(): Observable<DataPoint[]> {
-        let token = this.authService.getOauthToken();
+        let token = AuthenticationService.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
         let options = {
@@ -27,7 +27,7 @@ export class StatisticsService {
     }
 
     public getAccountStatisticsBetweenDates(startDate: Date, endDate: Date): Observable<DataPoint[]> {
-        let token = this.authService.getOauthToken();
+        let token = AuthenticationService.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
         let options = {

@@ -18,7 +18,7 @@ export class VerificationComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.authService.isUserLogin()) {
+        if (AuthenticationService.isUserLogin()) {
             this.router.navigate(['/statistics']);
         }
 

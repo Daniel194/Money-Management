@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {CookieService} from "ngx-cookie-service";
 import {Observable} from "rxjs/internal/Observable";
 import {ResetPassword} from "../domain/ResetPassword";
 import {ApiResponse} from "../domain/ApiResponse";
@@ -20,7 +19,7 @@ export class AuthenticationService {
 
     private changePasswordUrl = "api/uaa/users/change/password";
 
-    constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
+    constructor(private router: Router, private http: HttpClient) {
     }
 
     public createUser(user: AuthRequest): Observable<ApiResponse> {
@@ -48,7 +47,7 @@ export class AuthenticationService {
     }
 
     public updatePassword(password: String): Observable<ApiResponse> {
-        let token = this.getOauthToken();
+        let token = AuthenticationService.getOauthToken();
 
         let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
         let options = {
@@ -58,45 +57,45 @@ export class AuthenticationService {
         return this.http.post<ApiResponse>(this.changePasswordUrl, password, options);
     }
 
-    public getOauthToken(): string {
-        return this.cookieService.get('access_token');
+    public static getOauthToken(): string {
+        return localStorage.getItem('access_token');
     }
 
-    public getUsername(): string {
-        return this.cookieService.get("username");
+    public static getUsername(): string {
+        return localStorage.getItem("username");
     }
 
     public checkCredentials() {
-        if (!this.cookieService.check('access_token')) {
+        if (!AuthenticationService.isUserLogin()) {
             this.router.navigate(['']);
         }
     }
 
-    public isUserLogin(): boolean {
-        return this.cookieService.check('access_token');
+    public static isUserLogin(): boolean {
+        return localStorage.getItem('access_token') != null;
     }
 
     public logout() {
-        this.cookieService.delete('access_token');
-        this.cookieService.delete('username');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('username');
         this.router.navigate(['']);
-        localStorage.clear();
     }
 
     public saveCredentials(token, username, rememberMe: Boolean) {
-        let expireDate;
+        //TODO: remember me
 
-        if (rememberMe) {
-            expireDate = new Date(Date.now() + (1000 * token.expires_in));
-        } else {
-            expireDate = Date.now();
-        }
+        // let expireDate;
 
-        this.cookieService.set("access_token", token.access_token, expireDate);
-        this.cookieService.set("username", username, expireDate);
+        // if (rememberMe) {
+        //     expireDate = new Date(Date.now() + (1000 * token.expires_in));
+        // } else {
+        //     expireDate = Date.now();
+        // }
+
+        localStorage.setItem("access_token", token);
+        localStorage.setItem("username", username);
 
         this.router.navigate(['/statistics']);
-        window.location.reload();
     }
 
 }
