@@ -9,6 +9,7 @@ import com.money.management.auth.security.oauth2.user.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -55,6 +57,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
 
         user.setAttributes(oAuth2User.getAttributes());
+        user.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
         return user;
     }

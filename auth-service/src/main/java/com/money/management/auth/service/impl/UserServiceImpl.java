@@ -11,8 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -61,6 +64,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setPassword(signUpRequest.getPassword());
         user.setUsername(signUpRequest.getEmail());
+        user.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
         setUserValues(user);
 
