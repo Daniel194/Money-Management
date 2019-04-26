@@ -25,6 +25,7 @@ services:
     build: account-service
     ports:
       - 6000:6000
+      - 6005:6005
 
   account-mongodb:
     build: mongodb
@@ -35,6 +36,7 @@ services:
     build: statistics-service
     ports:
       - 7000:7000
+      - 7005:7005
 
   statistics-mongodb:
     build: mongodb
@@ -45,6 +47,7 @@ services:
     build: notification-service
     ports:
       - 8000:8000
+      - 8005:8005
 
   notification-mongodb:
     build: mongodb
