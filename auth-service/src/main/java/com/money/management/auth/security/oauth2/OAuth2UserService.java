@@ -57,7 +57,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         }
 
         user.setAttributes(oAuth2User.getAttributes());
-        user.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
         return user;
     }
