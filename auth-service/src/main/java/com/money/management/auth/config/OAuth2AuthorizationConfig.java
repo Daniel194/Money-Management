@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -27,7 +28,7 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    @Qualifier("authenticationManagerBean")
+    @Qualifier(BeanIds.AUTHENTICATION_MANAGER)
     private AuthenticationManager authenticationManager;
 
     @Autowired
