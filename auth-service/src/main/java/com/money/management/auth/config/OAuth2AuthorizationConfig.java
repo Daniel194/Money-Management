@@ -27,9 +27,6 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     private static final String SERVER = "server";
 
     @Autowired
-    private AppProperties appProperties;
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -38,6 +35,9 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -77,19 +77,12 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .tokenServices(tokenServices())
                 .tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter());
+                .accessTokenConverter(jwtAccessTokenConverter);
     }
 
     @Bean
     public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
-
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(appProperties.getAuth().getTokenSecret());
-        return converter;
+        return new JwtTokenStore(jwtAccessTokenConverter);
     }
 
     @Bean
@@ -97,8 +90,8 @@ class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     public DefaultTokenServices tokenServices() {
         DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore());
-        defaultTokenServices.setSupportRefreshToken(true);
-        defaultTokenServices.setTokenEnhancer(accessTokenConverter());
+        defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);
+
         return defaultTokenServices;
     }
 }
