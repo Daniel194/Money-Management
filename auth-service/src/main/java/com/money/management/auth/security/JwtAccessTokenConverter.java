@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +56,7 @@ public class JwtAccessTokenConverter extends org.springframework.security.oauth2
 
         UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-        OAuth2Request request = new OAuth2Request(null, null, null, true, null, null, null, null,
+        OAuth2Request request = new OAuth2Request(null, null, null, true, Collections.emptySet(), null, null, null,
                 null);
 
         return new OAuth2Authentication(request, user);
@@ -62,6 +65,22 @@ public class JwtAccessTokenConverter extends org.springframework.security.oauth2
     @Override
     public boolean isRefreshToken(OAuth2AccessToken token) {
         return false;
+    }
+
+    @Override
+    public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map) {
+        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(value);
+        Map<String, Object> info = new HashMap<>(map);
+        info.remove(EXP);
+        info.remove(AUD);
+
+        if (map.containsKey(EXP)) {
+            token.setExpiration((Date) map.get(EXP));
+        }
+
+        token.setScope(Collections.emptySet());
+        token.setAdditionalInformation(info);
+        return token;
     }
 
 }
