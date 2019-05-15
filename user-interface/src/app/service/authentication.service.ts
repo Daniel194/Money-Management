@@ -98,4 +98,9 @@ export class AuthenticationService {
         this.router.navigate(['/statistics']);
     }
 
+    public static isInRoles(roleList: Array<string>): boolean {
+        //TODO
+        return true;
+    }
+
 }
