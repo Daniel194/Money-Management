@@ -3,7 +3,7 @@ import {AuthenticationService} from "../service/authentication.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
-import {PasswordErrorStateMatcher} from "../util/password-error-state-matcher";
+import {PasswordMatchValidator} from "../guards/password-match.validator";
 
 @Component({
     selector: 'app-settings',
@@ -13,7 +13,7 @@ import {PasswordErrorStateMatcher} from "../util/password-error-state-matcher";
 export class SettingsComponent implements OnInit {
 
     public changePasswordForm: FormGroup;
-    public matcher: PasswordErrorStateMatcher;
+    public matcher: PasswordMatchValidator;
     public hidePassword1: Boolean;
     public hidePassword2: Boolean;
 
@@ -24,7 +24,7 @@ export class SettingsComponent implements OnInit {
 
         this.hidePassword1 = true;
         this.hidePassword2 = true;
-        this.matcher = new PasswordErrorStateMatcher();
+        this.matcher = new PasswordMatchValidator();
 
         this.changePasswordForm = this.fb.group({
             password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(40)]],

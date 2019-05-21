@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "../../../service/authentication.service";
 import {ToastrService} from "ngx-toastr";
 import {AccountSection} from "../account-section";
-import {PasswordErrorStateMatcher} from "../../../util/password-error-state-matcher";
+import {PasswordMatchValidator} from "../../../guards/password-match.validator";
 import {Router} from "@angular/router";
 import {AuthRequest} from "../../../domain/AuthRequest";
 
@@ -40,7 +40,7 @@ export class AccountConnectionComponent extends AccountSection {
     public loginForm: FormGroup;
     public createAccountForm: FormGroup;
 
-    public matcher: PasswordErrorStateMatcher;
+    public matcher: PasswordMatchValidator;
 
     constructor(private fb: FormBuilder,
                 private authService: AuthenticationService,
@@ -94,7 +94,7 @@ export class AccountConnectionComponent extends AccountSection {
         this.hidePassword1 = true;
         this.hidePassword2 = true;
         this.hidePassword3 = true;
-        this.matcher = new PasswordErrorStateMatcher();
+        this.matcher = new PasswordMatchValidator();
     }
 
     private initForms() {
