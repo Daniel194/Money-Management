@@ -3,7 +3,7 @@ import {AuthenticationService} from "../service/authentication.service";
 import {Router} from "@angular/router";
 import {StatisticsService} from "../service/statistics.service";
 import {DataPoint} from "../domain/DataPoint";
-import {DateFormatPipe} from "../pipe/DateFormatPipe";
+import {DateFormatPipe} from "../pipe/date-format.pipe";
 import {ItemMetric} from "../domain/ItemMetric";
 
 @Component({

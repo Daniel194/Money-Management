@@ -8,19 +8,22 @@ import {MaterialModule} from "./material.modules";
 import {AppRouting} from "./app.routing";
 import {AccountConnectionComponent} from "./front-page/account-section/account-connection/account-connection.component";
 import {FrontPageComponent} from './front-page/front-page.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ToastrModule} from "ngx-toastr";
 import {AccountComponent} from './account/account.component';
 import {StatisticsComponent} from './statistics/statistics.component';
 import {ItemDialogComponent} from './item-dialog/item-dialog.component';
 import {NgxChartsModule} from "@swimlane/ngx-charts";
-import {DateFormatPipe} from "./pipe/DateFormatPipe";
+import {DateFormatPipe} from "./pipe/date-format.pipe";
 import { SocialMediaConnectionComponent } from './front-page/account-section/social-media-connection/social-media-connection.component';
 import { AccountSectionComponent } from './front-page/account-section/account-section.component';
 import { AccountTroubleComponent } from './front-page/account-section/account-trouble/account-trouble.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SettingsComponent } from './settings/settings.component';
 import { VerificationComponent } from './verification/verification.component';
+import {SanitizeUrlPipe} from "./pipe/sanitize-url.pipe";
+import {ErrorInterceptor} from "./guards/error.interceptor";
+import {JwtInterceptor} from "./guards/jwt.interceptor";
 
 @NgModule({
     imports: [
@@ -46,6 +49,7 @@ import { VerificationComponent } from './verification/verification.component';
         StatisticsComponent,
         ItemDialogComponent,
         DateFormatPipe,
+        SanitizeUrlPipe,
         SocialMediaConnectionComponent,
         AccountSectionComponent,
         AccountTroubleComponent,
@@ -55,7 +59,10 @@ import { VerificationComponent } from './verification/verification.component';
     ],
     bootstrap: [AppComponent],
     providers: [
-        DateFormatPipe
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: SanitizeUrlPipe },
+        { provide: DateFormatPipe }
     ],
     entryComponents: [
         ItemDialogComponent
