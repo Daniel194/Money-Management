@@ -20,8 +20,6 @@ export class ItemDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.checkCredentials();
-
         if (this.item == null) {
             this.initItem()
         }

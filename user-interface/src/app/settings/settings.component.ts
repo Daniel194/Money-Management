@@ -33,7 +33,6 @@ export class SettingsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.checkCredentials();
     }
 
     onSubmitChangePassword() {

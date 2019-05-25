@@ -34,7 +34,6 @@ export class StatisticsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.checkCredentials();
         this.statisticsService.getCurrentAccountStatistics().subscribe(results => {
             this.datePoints = results;
             this.populateCharts(results);

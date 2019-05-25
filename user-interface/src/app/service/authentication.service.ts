@@ -65,12 +65,6 @@ export class AuthenticationService {
         return localStorage.getItem("username");
     }
 
-    public checkCredentials() {
-        if (!AuthenticationService.isUserLogin()) {
-            this.router.navigate(['']);
-        }
-    }
-
     public static isUserLogin(): boolean {
         return localStorage.getItem('access_token') != null;
     }
