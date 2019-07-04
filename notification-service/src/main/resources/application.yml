@@ -37,7 +37,7 @@ security:
       grant-type: client_credentials
       scope: server
     resource:
-      user-info-uri: http://auth-service:5000/uaa/users/current
+      user-info-uri: http://auth-service:5000/uaa/user/current
 
 server:
   servlet:
