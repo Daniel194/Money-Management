@@ -57,7 +57,8 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
 
     private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
         Object principal = getPrincipal(map);
-        OAuth2Request request = getRequest(map);
+        OAuth2Request request = new OAuth2Request(null, null, null, true, Collections.emptySet(), null, null, null,
+                null);
         List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
         token.setDetails(map);
@@ -71,18 +72,6 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
             }
         }
         return "unknown";
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private OAuth2Request getRequest(Map<String, Object> map) {
-        Map<String, Object> request = (Map<String, Object>) map.get("oauth2Request");
-
-        String requestClientId = (String) request.get("clientId");
-        Set<String> scope = new LinkedHashSet<>(request.containsKey("scope") ?
-                (Collection<String>) request.get("scope") : Collections.emptySet());
-
-        return new OAuth2Request(null, requestClientId, null, true,
-                new HashSet<>(scope), null, null, null, null);
     }
 
     @Override
