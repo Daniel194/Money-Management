@@ -74,8 +74,7 @@ export class AccountConnectionComponent extends AccountSection {
         console.log(this.loginForm.controls.rememberMe.value);
 
         this.authService.obtainAccessToken(authRequest).subscribe(
-            data => this.authService.saveCredentials(data.accessToken, authRequest.email, this.loginForm.controls.rememberMe.value),
-            () => this.displayErrorMessage("Bad credentials !"))
+            data => this.authService.saveCredentials(data.accessToken, authRequest.email, this.loginForm.controls.rememberMe.value))
     }
 
     toggleFlip() {
