@@ -43,6 +43,7 @@ export class StatisticsComponent implements OnInit {
 
     public logout() {
         this.authService.logout();
+        location.reload(true);
     }
 
     public navigateToAccount() {

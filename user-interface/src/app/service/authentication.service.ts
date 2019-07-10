@@ -76,15 +76,13 @@ export class AuthenticationService {
     }
 
     public saveCredentials(token, username, rememberMe: Boolean) {
-        //TODO: remember me
+        let expireDate;
 
-        // let expireDate;
-
-        // if (rememberMe) {
-        //     expireDate = new Date(Date.now() + (1000 * token.expires_in));
-        // } else {
-        //     expireDate = Date.now();
-        // }
+        if (rememberMe) {
+            expireDate = new Date(Date.now() + 1000000);
+        } else {
+            expireDate = Date.now();
+        }
 
         localStorage.setItem("access_token", token);
         localStorage.setItem("username", username);

@@ -42,6 +42,7 @@ export class SettingsComponent implements OnInit {
 
     public logout() {
         this.authService.logout();
+        location.reload(true);
     }
 
     public navigateToAccount() {
