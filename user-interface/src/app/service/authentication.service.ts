@@ -19,6 +19,8 @@ export class AuthenticationService {
 
     private changePasswordUrl = "api/uaa/users/change/password";
 
+    private socialMediaConnectionUrl = "api/uaa/oauth2/authorize";
+
     constructor(private router: Router, private http: HttpClient) {
     }
 
@@ -44,6 +46,10 @@ export class AuthenticationService {
 
     public verifyEmail(toke: String): Observable<ApiResponse> {
         return this.http.get<ApiResponse>(this.verificationEmailUrl + '?token=' + toke);
+    }
+
+    public socialMediaConnection(provide: String) : Observable<void> {
+        return this.http.get<void>(this.socialMediaConnectionUrl + "/" + provide + "?" + this.router.url);
     }
 
     public updatePassword(password: String): Observable<ApiResponse> {

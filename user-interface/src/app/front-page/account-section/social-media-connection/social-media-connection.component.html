@@ -1,9 +1,9 @@
 <div class="container" [@showSocial]="showSection">
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2 text-center">
-      <a href="#" class="fa fa-social fa-facebook"></a>
-      <a href="#" class="fa fa-social fa-twitter"></a>
-      <a href="#" class="fa fa-social fa-google-plus"></a>
+      <a (click)="socialConnection('facebook')" class="fa fa-social fa-facebook"></a>
+      <a (click)="socialConnection('twitter')" class="fa fa-social fa-twitter"></a>
+      <a (click)="socialConnection('google')" class="fa fa-social fa-google-plus"></a>
     </div>
   </div>
 </div>
