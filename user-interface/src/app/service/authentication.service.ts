@@ -49,7 +49,7 @@ export class AuthenticationService {
     }
 
     public socialMediaConnection(provide: String) : Observable<void> {
-        return this.http.get<void>(this.socialMediaConnectionUrl + "/" + provide + "?" + this.router.url);
+        return this.http.get<void>(this.socialMediaConnectionUrl + "/" + provide + "?redirect_uri=" + this.router.url);
     }
 
     public updatePassword(password: String): Observable<ApiResponse> {
