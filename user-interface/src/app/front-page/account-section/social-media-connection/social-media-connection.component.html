@@ -1,9 +1,9 @@
 <div class="container" [@showSocial]="showSection">
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2 text-center">
-      <a (click)="socialConnection('facebook')" class="fa fa-social fa-facebook"></a>
-      <a (click)="socialConnection('twitter')" class="fa fa-social fa-twitter"></a>
-      <a (click)="socialConnection('google')" class="fa fa-social fa-google-plus"></a>
+      <a href="http://localhost/uaa/oauth2/authorize/facebook?redirect_uri=http://localhost:4200/oauth2/redirect" class="fa fa-social fa-facebook"></a>
+      <a class="fa fa-social fa-twitter"></a>
+      <a href="http://localhost/uaa/oauth2/authorize/google?redirect_uri=http://localhost:4200/oauth2/redirect" class="fa fa-social fa-google-plus"></a>
     </div>
   </div>
 </div>
