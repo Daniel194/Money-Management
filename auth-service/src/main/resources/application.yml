@@ -28,16 +28,16 @@ spring:
       client:
         registration:
           google:
-            client-id: 98680346203-ocda096fo3f27enrbcotphf7i0mituqh.apps.googleusercontent.com
-            client-secret: sBEbZZgRAM04cjF4T0Mv3ZPb
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            clientId: 98680346203-ocda096fo3f27enrbcotphf7i0mituqh.apps.googleusercontent.com
+            clientSecret: sBEbZZgRAM04cjF4T0Mv3ZPb
+            redirectUriTemplate: "http://localhost:80/uaa/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           facebook:
-            client-id: 301931163845796
-            client-secret: d1a7d45545b703b0034c64be457f6414
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            clientId: 301931163845796
+            clientSecret: d1a7d45545b703b0034c64be457f6414
+            redirectUriTemplate: "http://localhost:80/uaa/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
@@ -57,7 +57,7 @@ app:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
     tokenExpirationMsec: 864000000
   oauth2:
-    authorizedRedirectUris: http://auth-service:5000/uaa/oauth2/redirect
+    authorizedRedirectUris: http://localhost:4200/oauth2/redirect
 
 server:
   servlet:
