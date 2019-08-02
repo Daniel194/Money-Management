@@ -60,11 +60,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring().antMatchers("/auth/**", "/oauth2/**", "/error**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
@@ -77,6 +72,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
+                .antMatchers("/auth/**", "/oauth2/**", "/error**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login().authorizationEndpoint()
