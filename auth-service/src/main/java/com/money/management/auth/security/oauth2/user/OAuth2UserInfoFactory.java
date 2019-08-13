@@ -9,7 +9,7 @@ public class OAuth2UserInfoFactory {
 
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
 
-        switch (AuthProvider.valueOf(registrationId)) {
+        switch (AuthProvider.getProvider(registrationId)) {
             case GOOGLE:
                 return new GoogleOAuth2UserInfo(attributes);
             case FACEBOOK:

@@ -62,7 +62,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
 
-        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+        user.setProvider(AuthProvider.getProvider(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setUsername(oAuth2UserInfo.getEmail());
 
@@ -78,7 +78,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private void verifyUserProvider(User user, OAuth2UserRequest oAuth2UserRequest) {
-        if (!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+        if (!user.getProvider().equals(AuthProvider.getProvider(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
             throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                     user.getProvider() + " account. Please use your " + user.getProvider() +
                     " account to login.");
