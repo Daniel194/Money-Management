@@ -7,6 +7,7 @@ import {ForgotPasswordComponent} from "./forgot-password/forgot-password.compone
 import {SettingsComponent} from "./settings/settings.component";
 import {VerificationComponent} from "./verification/verification.component";
 import {AuthGuard} from "./guards/auth.guard";
+import {Oauth2Component} from "./oauth2/oauth2.component";
 
 const APP_ROUTES: Routes = [
     {path: '', component: FrontPageComponent},
@@ -15,6 +16,7 @@ const APP_ROUTES: Routes = [
     {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
     {path: 'reset-password', component: ForgotPasswordComponent},
     {path: 'verification', component: VerificationComponent},
-    { path: '**', redirectTo: '/statistics', pathMatch: 'full' }
+    {path: 'oauth2/redirect', component: Oauth2Component},
+    {path: '**', redirectTo: '/statistics', pathMatch: 'full'}
 ];
 export const AppRouting: ModuleWithProviders = RouterModule.forRoot(APP_ROUTES);

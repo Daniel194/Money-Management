@@ -24,6 +24,7 @@ import { VerificationComponent } from './verification/verification.component';
 import {SanitizeUrlPipe} from "./pipe/sanitize-url.pipe";
 import {ErrorInterceptor} from "./guards/error.interceptor";
 import {JwtInterceptor} from "./guards/jwt.interceptor";
+import { Oauth2Component } from './oauth2/oauth2.component';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import {JwtInterceptor} from "./guards/jwt.interceptor";
         AccountTroubleComponent,
         ForgotPasswordComponent,
         SettingsComponent,
-        VerificationComponent
+        VerificationComponent,
+        Oauth2Component
     ],
     bootstrap: [AppComponent],
     providers: [
