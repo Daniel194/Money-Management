@@ -777,7 +777,7 @@ input.mat-input-element {
     width: 100%;
 }
 
-.logout, .add, .close-button {
+.logout, .add, .close-button, .close {
     right: 32px;
     position: fixed;
     cursor: pointer;
@@ -807,17 +807,17 @@ input.mat-input-element {
     height: 40px;
 }
 
-.close-button {
+.close-button, .close {
     bottom: 32px;
 }
 
-.add:hover, .logout:hover, .close-button:hover {
+.add:hover, .logout:hover, .close-button:hover, .close:hover {
     opacity: 1;
 }
 
 .add-icon:before, .add-icon:after,
 .logout-icon:before, .logout-icon:after,
-.close-button-icon:before, .close-button-icon:after {
+.close-icon:before, .close-icon:after {
     position: absolute;
     left: 15px;
     content: ' ';
@@ -834,7 +834,7 @@ input.mat-input-element {
     transform: rotate(0deg);
 }
 
-.add-text, .close-button-text {
+.add-text, .close-button-text, .close-text {
     text-align: center;
     font-size: 15px;
     padding-left: 5px;

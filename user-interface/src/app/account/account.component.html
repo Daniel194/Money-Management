@@ -13,7 +13,7 @@
     <div class="row">
         <div class="account-columns col-sm-12 col-md-4">
             <div class="incomes-sprite-title zoomplus incomebutton">INCOMES</div>
-            <div id="noincomes" class="incomebutton" (click)="openAddIncome()" *ngIf="account.incomes.length == 0">
+            <div id="noincomes" class="incomebutton" (click)="openAddIncome()" *ngIf="account.incomes?.length == 0">
                 <div class="hoverplace"></div>
                 <div class="majorplusitem">
                     <div class="plusitemborder"></div>
@@ -58,7 +58,7 @@
         </div>
         <div class="account-columns col-sm-12 col-md-4">
             <div class="expenses-sprite-title zoomplus">EXPENSES</div>
-            <div id="noexpenses" (click)="openAddIncome()" *ngIf="account.expenses.length == 0">
+            <div id="noexpenses" (click)="openAddIncome()" *ngIf="account.expenses?.length == 0">
                 <div class="hoverplace"></div>
                 <div class="majorplusitem">
                     <div class="plusitemborder"></div>
