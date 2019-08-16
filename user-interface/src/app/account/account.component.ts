@@ -26,6 +26,15 @@ export class AccountComponent implements OnInit {
     ngOnInit() {
         this.accountService.getCurrentAccount().subscribe(result => {
             this.account = result;
+
+            if (this.account.incomes == null) {
+                this.account.incomes = []
+            }
+
+            if (this.account.expenses == null) {
+                this.account.expenses = []
+            }
+
         })
     }
 
