@@ -1,6 +1,7 @@
 package com.money.management.account;
 
 import com.money.management.account.service.security.CustomUserInfoTokenServices;
+import com.money.management.account.service.security.SecurityHolderOAuth2AccessToken;
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,18 +16,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 
 @SpringBootApplication
@@ -54,7 +49,10 @@ public class AccountApplication extends ResourceServerConfigurerAdapter {
 
     @Bean
     public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor(getOauth2ClientContext(), clientCredentialsResourceDetails());
+        DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext();
+        context.setAccessToken(new SecurityHolderOAuth2AccessToken());
+
+        return new OAuth2FeignRequestInterceptor(context, clientCredentialsResourceDetails());
     }
 
     @Bean
@@ -70,23 +68,6 @@ public class AccountApplication extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().authenticated();
-    }
-
-    private OAuth2ClientContext getOauth2ClientContext() {
-        DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext();
-        Authentication principal = SecurityContextHolder.getContext().getAuthentication();
-
-        if (principal instanceof OAuth2Authentication) {
-            OAuth2Authentication authentication = (OAuth2Authentication) principal;
-            Object details = authentication.getDetails();
-            if (details instanceof OAuth2AuthenticationDetails) {
-                OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) details;
-                String token = oauthDetails.getTokenValue();
-                context.setAccessToken(new DefaultOAuth2AccessToken(token));
-            }
-        }
-
-        return context;
     }
 
 }
