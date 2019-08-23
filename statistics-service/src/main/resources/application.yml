@@ -38,7 +38,7 @@ eureka:
 
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
 
 rates:
   url: http://data.fixer.io/api/latest?access_key=3d07e82c993b66c9c2a85c1312e9105c
