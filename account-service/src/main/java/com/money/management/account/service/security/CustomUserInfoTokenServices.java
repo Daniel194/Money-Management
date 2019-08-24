@@ -19,11 +19,13 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import java.util.*;
 
 public class CustomUserInfoTokenServices implements ResourceServerTokenServices {
-    private final Log logger = LogFactory.getLog(getClass());
-    private static final String ERROR = "error";
     private static final String[] PRINCIPAL_KEYS = new String[]{"user", "username", "userid", "user_id", "login", "id", "name"};
+    private static final String ERROR = "error";
+
+    private final Log logger = LogFactory.getLog(getClass());
     private final String userInfoEndpointUrl;
     private final String clientId;
+
     private OAuth2RestOperations restTemplate;
     private String tokenType = DefaultOAuth2AccessToken.BEARER_TYPE;
     private AuthoritiesExtractor authoritiesExtractor = new FixedAuthoritiesExtractor();

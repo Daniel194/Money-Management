@@ -51,7 +51,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
     public OAuth2Authentication loadAuthentication(String accessToken) {
         Map<String, Object> map = getMap(this.userInfoEndpointUrl, accessToken);
         if (map.containsKey(ERROR)) {
-            this.logger.debug("Userinfo returned error: " + map.get(ERROR));
+            this.logger.debug("User info returned error: " + map.get(ERROR));
             throw new InvalidTokenException(accessToken);
         }
         return extractAuthentication(map);
@@ -115,4 +115,5 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
     private boolean isNoToken(OAuth2AccessToken existingToken, String accessToken) {
         return existingToken == null || !accessToken.equals(existingToken.getValue());
     }
+
 }
