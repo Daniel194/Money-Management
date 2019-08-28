@@ -19,7 +19,6 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PreAuthorize("#oauth2.hasScope('server')")
     @RequestMapping(path = "/find", method = RequestMethod.GET)
     public Account getAccountByName(@RequestParam("name") String name) {
         return accountService.findByName(name);

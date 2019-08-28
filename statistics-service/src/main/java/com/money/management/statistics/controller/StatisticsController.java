@@ -33,13 +33,11 @@ public class StatisticsController {
         return statisticsService.findByAccountNameBetweenDates(principal.getName(), beginDate, endDate);
     }
 
-    @PreAuthorize("#oauth2.hasScope('server')")
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public List<DataPoint> getStatisticsByAccountName(@RequestParam("name") String accountName) {
         return statisticsService.findByAccountName(accountName);
     }
 
-    @PreAuthorize("#oauth2.hasScope('server')")
     @RequestMapping(value = "/find", method = RequestMethod.PUT)
     public void saveAccountStatistics(@RequestParam("name") String accountName, @Valid @RequestBody Account account) {
         statisticsService.save(accountName, account);
