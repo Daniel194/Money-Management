@@ -1,5 +1,6 @@
 package com.money.management.auth.service.impl;
 
+import com.money.management.auth.domain.AuthProvider;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.domain.VerificationToken;
 import com.money.management.auth.exception.BadRequestException;
@@ -81,7 +82,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     private void verifyUser(String username) {
-        User user = userRepository.findUsersByUsername(username).orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
+        User user = userRepository.findUsersByUsername(username)
+                .filter(u -> AuthProvider.LOCAL.equals(u.getProvider()))
+                .orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
 
         if (user.isEnabled()) {
             throw new BadRequestException("The user was already enabled !");

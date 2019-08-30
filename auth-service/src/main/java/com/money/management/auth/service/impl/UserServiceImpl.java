@@ -50,7 +50,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String name, String password) {
-        User user = repository.findUsersByUsername(name).orElseThrow(() -> new BadRequestException("User doesn't exist !"));
+        User user = repository.findUsersByUsername(name)
+                .filter(u -> AuthProvider.LOCAL.equals(u.getProvider()))
+                .orElseThrow(() -> new BadRequestException("User doesn't exist !"));
+
         user.setPassword(encoder.encode(password));
 
         repository.save(user);

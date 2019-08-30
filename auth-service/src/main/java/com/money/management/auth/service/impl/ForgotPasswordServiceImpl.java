@@ -1,5 +1,6 @@
 package com.money.management.auth.service.impl;
 
+import com.money.management.auth.domain.AuthProvider;
 import com.money.management.auth.domain.ForgotPasswordToken;
 import com.money.management.auth.exception.BadRequestException;
 import com.money.management.auth.payload.ResetPasswordRequest;
@@ -38,7 +39,9 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
     @Override
     public void sendEmail(String email) {
-        User user = userRepository.findUsersByUsername(email).orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
+        User user = userRepository.findUsersByUsername(email)
+                .filter(u -> AuthProvider.LOCAL.equals(u.getProvider()))
+                .orElseThrow(() -> new BadRequestException("User doesn't exist, please register !"));
 
         if (!user.isEnabled()) {
             throw new BadRequestException("The user isn't enabled !");
