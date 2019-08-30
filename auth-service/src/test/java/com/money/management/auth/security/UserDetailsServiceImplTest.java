@@ -1,6 +1,7 @@
 package com.money.management.auth.security;
 
 import com.money.management.auth.AuthApplication;
+import com.money.management.auth.domain.AuthProvider;
 import com.money.management.auth.repository.UserRepository;
 import com.money.management.auth.domain.User;
 import com.money.management.auth.security.impl.UserDetailsServiceImpl;
@@ -39,11 +40,21 @@ public class UserDetailsServiceImplTest {
     @Test
     public void shouldLoadByUsernameWhenUserExists() {
         User user = new User();
+        user.setProvider(AuthProvider.LOCAL);
 
         when(repository.findUsersByUsername(any())).thenReturn(Optional.of(user));
         UserDetails loaded = service.loadUserByUsername("name");
 
         assertEquals(user, loaded);
+    }
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void shouldFailToLoadUserFromOtherProvider() {
+        User user = new User();
+        user.setProvider(AuthProvider.GOOGLE);
+
+        when(repository.findUsersByUsername(any())).thenReturn(Optional.of(user));
+        UserDetails loaded = service.loadUserByUsername("name");
     }
 
     @Test(expected = UsernameNotFoundException.class)
