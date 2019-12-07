@@ -1,19 +1,13 @@
-[![Build Status](https://travis-ci.org/Daniel194/Money-Management.svg?branch=master)](https://travis-ci.org/Daniel194/Money-Management) 
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.money.management)](https://sonarcloud.io/dashboard?id=com.money.management) 
-
-# Piggy Metrics
+# Money Management
 
 **A simple way to deal with personal finances**
 
-This is a [proof-of-concept application](http://my-piggymetrics.rhcloud.com), which demonstrates [Microservice Architecture Pattern](http://martinfowler.com/microservices/) using Spring Boot, Spring Cloud and Docker.
-With a pretty neat user interface, by the way.
-
-![](https://cloud.githubusercontent.com/assets/6069066/13864234/442d6faa-ecb9-11e5-9929-34a9539acde0.png)
-![Piggy Metrics](https://cloud.githubusercontent.com/assets/6069066/13830155/572e7552-ebe4-11e5-918f-637a49dff9a2.gif)
+This is a proof-of-concept application , which demonstrates [Microservice Architecture Pattern](http://martinfowler.com/microservices/) using Spring Boot, Spring Cloud and Docker.
+With a user interface in Angular 
 
 ## Functional services
 
-PiggyMetrics was decomposed into three core microservices. All of them are independently deployable applications, organized around certain business domains.
+Money Management was decomposed into three core microservices. All of them are independently deployable applications, organized around certain business domains.
 
 <img width="880" alt="Functional services" src="https://cloud.githubusercontent.com/assets/6069066/13900465/730f2922-ee20-11e5-8df0-e7b51c668847.png">
 
@@ -59,7 +53,7 @@ There's a bunch of common patterns in distributed systems, which could help us t
 ### Config service
 [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) is horizontally scalable centralized configuration service for distributed systems. It uses a pluggable repository layer that currently supports local storage, Git, and Subversion. 
 
-In this project, I use `native profile`, which simply loads config files from the local classpath. You can see `shared` directory in [Config service resources](https://github.com/sqshq/PiggyMetrics/tree/master/config/src/main/resources). Now, when Notification-service requests it's configuration, Config service responses with `shared/notification-service.yml` and `shared/application.yml` (which is shared between all client applications).
+In this project, I use `native profile`, which simply loads config files from the local classpath. You can see `shared` directory in Config service resources. Now, when Notification-service requests it's configuration, Config service responses with `shared/notification-service.yml` and `shared/application.yml` (which is shared between all client applications).
 
 ##### Client side usage
 Just build Spring Boot application with `spring-cloud-starter-config` dependency, autoconfiguration will do the rest.
@@ -76,7 +70,7 @@ spring:
 ```
 
 ##### With Spring Cloud Config, you can change app configuration dynamically. 
-For example, [EmailService bean](https://github.com/sqshq/PiggyMetrics/blob/master/notification-service/src/main/java/com/piggymetrics/notification/service/EmailServiceImpl.java) was annotated with `@RefreshScope`. That means, you can change e-mail text and subject without rebuild and restart Notification service application.
+For example, EmailService bean was annotated with `@RefreshScope`. That means, you can change e-mail text and subject without rebuild and restart Notification service application.
 
 First, change required properties in Config server. Then, perform refresh request to Notification service:
 `curl -H "Authorization: Bearer #token#" -XPOST http://127.0.0.1:8000/notifications/refresh`
@@ -86,18 +80,18 @@ Also, you could use Repository [webhooks to automate this process](http://cloud.
 ##### Notes
 - There are some limitations for dynamic refresh though. `@RefreshScope` doesn't work with `@Configuration` classes and doesn't affect `@Scheduled` methods
 - `fail-fast` property means that Spring Boot application will fail startup immediately, if it cannot connect to the Config Service.
-- There are significant [security notes](https://github.com/sqshq/PiggyMetrics#security) below
+- There are significant security notes below
 
 ### Auth service
 Authorization responsibilities are completely extracted to separate server, which grants [OAuth2 tokens](https://tools.ietf.org/html/rfc6749) for the backend resource services. Auth Server is used for user authorization as well as for secure machine-to-machine communication inside a perimeter.
 
-In this project, I use [`Password credentials`](https://tools.ietf.org/html/rfc6749#section-4.3) grant type for users authorization (since it's used only by native PiggyMetrics UI) and [`Client Credentials`](https://tools.ietf.org/html/rfc6749#section-4.4) grant for microservices authorization.
+In this project, I use [`Password credentials`](https://tools.ietf.org/html/rfc6749#section-4.3) grant type for users authorization (since it's used only by native Money Management UI) and [`Client Credentials`](https://tools.ietf.org/html/rfc6749#section-4.4) grant for microservices authorization.
 
-Spring Cloud Security provides convenient annotations and autoconfiguration to make this really easy to implement from both server and client side. You can learn more about it in [documentation](http://cloud.spring.io/spring-cloud-security/spring-cloud-security.html) and check configuration details in [Auth Server code](https://github.com/sqshq/PiggyMetrics/tree/master/auth-service/src/main/java/com/piggymetrics/auth).
+Spring Cloud Security provides convenient annotations and autoconfiguration to make this really easy to implement from both server and client side. You can learn more about it in [documentation](http://cloud.spring.io/spring-cloud-security/spring-cloud-security.html) and check configuration details in Auth Server code.
 
 From the client side, everything works exactly the same as with traditional session-based authorization. You can retrieve `Principal` object from request, check user's roles and other stuff with expression-based access control and `@PreAuthorize` annotation.
 
-Each client in PiggyMetrics (account-service, statistics-service, notification-service and browser) has a scope: `server` for backend services, and `ui` - for the browser. So we can also protect controllers from external access, for example:
+Each client in Money Management (account-service, statistics-service, notification-service and browser) has a scope: `server` for backend services, and `ui` - for the browser. So we can also protect controllers from external access, for example:
 
 ``` java
 @PreAuthorize("#oauth2.hasScope('server')")
@@ -126,7 +120,7 @@ zuul:
 
 ```
 
-That means all requests starting with `/notifications` will be routed to Notification service. There is no hardcoded address, as you can see. Zuul uses [Service discovery](https://github.com/sqshq/PiggyMetrics/blob/master/README.md#service-discovery) mechanism to locate Notification service instances and also [Circuit Breaker and Load Balancer](https://github.com/sqshq/PiggyMetrics/blob/master/README.md#http-client-load-balancer-and-circuit-breaker), described below.
+That means all requests starting with `/notifications` will be routed to Notification service. There is no hardcoded address, as you can see. Zuul uses Service discovery mechanism to locate Notification service instances and also Circuit Breaker and Load Balancer, described below.
 
 ### Service discovery
 
@@ -154,14 +148,14 @@ Netflix OSS provides another great set of tools.
 #### Ribbon
 Ribbon is a client side load balancer which gives you a lot of control over the behaviour of HTTP and TCP clients. Compared to a traditional load balancer, there is no need in additional hop for every over-the-wire invocation - you can contact desired service directly.
 
-Out of the box, it natively integrates with Spring Cloud and Service Discovery. [Eureka Client](https://github.com/sqshq/PiggyMetrics#service-discovery) provides a dynamic list of available servers so Ribbon could balance between them.
+Out of the box, it natively integrates with Spring Cloud and Service Discovery. Eureka Client provides a dynamic list of available servers so Ribbon could balance between them.
 
 #### Hystrix
 Hystrix is the implementation of [Circuit Breaker pattern](http://martinfowler.com/bliki/CircuitBreaker.html), which gives a control over latency and failure from dependencies accessed over the network. The main idea is to stop cascading failures in a distributed environment with a large number of microservices. That helps to fail fast and recover as soon as possible - important aspects of fault-tolerant systems that self-heal.
 
 Besides circuit breaker control, with Hystrix you can add a fallback method that will be called to obtain a default value in case the main command fails.
 
-Moreover, Hystrix generates metrics on execution outcomes and latency for each command, that we can use to [monitor system behavior](https://github.com/sqshq/PiggyMetrics#monitor-dashboard).
+Moreover, Hystrix generates metrics on execution outcomes and latency for each command, that we can use to monitor system behavior.
 
 #### Feign
 Feign is a declarative Http client, which seamlessly integrates with Ribbon and Hystrix. Actually, with one `spring-cloud-starter-feign` dependency and `@EnableFeignClients` annotation you have a full set of Load balancer, Circuit breaker and Http client with sensible ready-to-go default configuration.
@@ -186,7 +180,7 @@ public interface StatisticsServiceClient {
 
 In this project configuration, each microservice with Hystrix on board pushes metrics to Turbine via Spring Cloud Bus (with AMQP broker). The Monitoring project is just a small Spring boot application with [Turbine](https://github.com/Netflix/Turbine) and [Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
 
-See below [how to get it up and running](https://github.com/sqshq/PiggyMetrics#how-to-run-all-the-things).
+See below how to get it up and running.
 
 Let's see our system behavior under load: Account service calls Statistics service and it responses with a vary imitation delay. Response timeout threshold is set to 1 second.
 
@@ -218,7 +212,7 @@ Here is a simple Continuous Delivery workflow, implemented in this project:
 
 <img width="880" src="https://cloud.githubusercontent.com/assets/6069066/14159789/0dd7a7ce-f6e9-11e5-9fbb-a7fe0f4431e3.png">
 
-In this [configuration](https://github.com/sqshq/PiggyMetrics/blob/master/.travis.yml), Travis CI builds tagged images for each successful git push. So, there are always `latest` image for each microservice on [Docker Hub](https://hub.docker.com/r/sqshq/) and older images, tagged with git commit hash. It's easy to deploy any of them and quickly rollback, if needed.
+In this configuration, Travis CI builds tagged images for each successful git push. So, there are always `latest` image for each microservice on [Docker Hub](https://hub.docker.com/r/sqshq/) and older images, tagged with git commit hash. It's easy to deploy any of them and quickly rollback, if needed.
 
 ## How to run all the things?
 
@@ -246,10 +240,6 @@ If you'd like to build images yourself (with some changes in the code, for examp
 - http://localhost:15672 - RabbitMq management (default login/password: guest/guest)
 
 #### Notes
-All Spring Boot applications require already running [Config Server](https://github.com/sqshq/PiggyMetrics#config-service) for startup. But we can start all containers simultaneously because of `depends_on` docker-compose option.
+All Spring Boot applications require already running Config Server for startup. But we can start all containers simultaneously because of `depends_on` docker-compose option.
 
 Also, Service Discovery mechanism needs some time after all applications startup. Any service is not available for discovery by clients until the instance, the Eureka server and the client all have the same metadata in their local cache, so it could take 3 heartbeats. Default heartbeat period is 30 seconds.
-
-## Feedback welcome
-
-PiggyMetrics is open source, and would greatly appreciate your help. Feel free to contact me with any questions.
